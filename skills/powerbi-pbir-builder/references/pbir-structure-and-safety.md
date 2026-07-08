@@ -1,0 +1,77 @@
+# PBIR structure and safe editing
+
+PBIR (the Power BI Enhanced Report format) is the folder-of-JSON-files layout Power BI
+Desktop writes when you save a report as a PBIP project. It is the current format, current
+Desktop versions write it by default. This reference covers the folder layout, which files
+you write versus which only Desktop can generate, and the safety checklist.
+
+## Folder layout
+
+```
+ProjectName.Report/
+  .platform                        Desktop generates. Report type and a real GUID.
+  definition.pbir                  Desktop generates. Links this report to its semantic
+                                    model, either byPath (local pbip) or byConnection
+                                    (a published dataset).
+  definition/
+    version.json                   Desktop generates. The PBIR version.
+    report.json                    Desktop generates. Report level settings: theme,
+                                    report level filters, resource packages.
+    reportExtensions.json          Report level or visual level DAX that is not in the
+                                    model (extension measures, visual calculations). Use
+                                    sparingly, prefer a real model measure when you can.
+    pages/
+      pages.json                   WE EDIT. Page order and the active page.
+      pgOverview/                  WE CREATE. One folder per page.
+        page.json                  WE CREATE. Page size, background, page level filters.
+        visuals/
+          vSalesBarChart/          WE CREATE. One folder per visual.
+            visual.json            WE CREATE. The visual type, its data bindings, and
+                                    its formatting.
+  StaticResources/
+    RegisteredResources/           Custom theme JSON lives here if registered by Desktop.
+```
+
+## What you write versus what only Desktop can generate
+
+Desktop bakes real, version specific GUIDs and internal settings into `.platform`,
+`definition.pbir`, `report.json`, and `version.json`. These are not practical to hand write
+and change between Desktop versions. Never try to build a PBIP from scratch by hand writing
+these. Always start from a project the user saved from Desktop, then add to it.
+
+You write: `pages.json` (append to `pageOrder`), one `page.json` per new page, and one
+`visual.json` per new visual. That is the safe, stable surface.
+
+## The safety checklist, every time
+
+1. Confirm Power BI Desktop is closed. If it is open, ask the user to close it first. Desktop
+   holds the project's files open and can overwrite or lock them.
+2. Back up the `.Report` folder, or confirm it is committed to git, before writing anything.
+3. Read one existing `visual.json` in the project to find the `$schema` value already in use.
+   Reuse that exact value for every new file. Do not hardcode a version.
+4. Write the new folders and files.
+5. Parse every JSON file you wrote (a simple `JSON.parse` or equivalent) before telling the
+   user it is done. A single missing comma or bracket blocks the whole report from loading in
+   Desktop, so catch it before the user sees it.
+6. Tell the user the files are written and to reopen the `.pbip` in Desktop.
+7. If a visual does not render after reopening, valid JSON does not guarantee rendering. Check
+   the field reference `Entity` and `Property` values match the model exactly (case
+   sensitive), and that the visual is not sized to zero or cropped by its container.
+
+## Formatting: theme first, bespoke second
+
+Formatting is resolved in this order: Power BI defaults, then the theme's wildcard rules,
+then the theme's per visual type rules, then whatever is written directly in that visual's
+`visual.json`. The last one wins.
+
+Prefer putting color and font choices in the report's theme JSON, see
+`guidelines/house-default-theme.json`, over repeating the same formatting object in many
+`visual.json` files. A theme change updates every visual at once. A bespoke `visual.json`
+override only fixes one visual, and the next visual you add will not inherit it.
+
+## Why this is worth the caution
+
+The PBIR format has no built in guard rails against a broken reference or a malformed file,
+it is plain JSON that Desktop trusts. Treat this skill as a precise tool, not a shortcut.
+When in doubt, make the change in Power BI Desktop by hand once, save, then read the
+`visual.json` Desktop produced to see the exact shape it expects before writing more by hand.

@@ -51,6 +51,23 @@ tables. The two jobs stay separate.
 - Keep raw technical names out of the report. If a column has to keep a technical name for a join,
   hide it (next section).
 
+## Give every measure a display folder, a description, and a format string
+
+Three properties turn a flat list of measures into something a report author can actually
+navigate, and they cost seconds per measure in the Properties pane:
+
+- `DisplayFolder`, so related measures group together in the field list instead of one long
+  alphabetical list. Group by subject, for example `Sales`, `Sales\YoY`, `Capacity`.
+- `Description`, a one line note on what the measure does and any assumption it bakes in. It
+  shows as a tooltip when a report author hovers the measure, which saves them a trip to ask
+  you what it means.
+- `FormatString`, set explicitly rather than left to the default. A percent measure with no
+  format string looks like a raw decimal on a card until someone fixes it after the fact.
+
+Set these before a measure ships in a report, not after someone asks why it looks wrong. This
+is a standard Analysis Services modeling practice, not a house quirk, and it is cheap insurance
+against a report that reads sloppy.
+
 ## Hide keys and technical columns
 
 The field list should show only what a report author should touch.
@@ -96,6 +113,8 @@ Year and Month slicers work. For the actual layout, slicer choices, and visuals,
 - Are all measures in `_Measures`, and is that table named with the leading underscore, never the
   bare reserved word `Measures`.
 - Are there zero measures sitting on fact or dimension tables.
+- Does every shipped measure have a `DisplayFolder`, a `Description`, and an explicit
+  `FormatString`.
 - Are all key and foreign key columns hidden.
 - Are user facing names friendly and consistently cased.
 - Is there exactly one Date table, and is it marked as a date table.

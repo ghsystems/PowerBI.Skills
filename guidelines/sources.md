@@ -84,3 +84,29 @@ of mid 2026. Re-check yearly.
   official schema, some are dated): https://github.com/deldersveld/PowerBI-ThemeTemplates
 - NajiElKotob/Awesome-Power-BI, curated link directory (includes Fabric links, filter for Pro):
   https://github.com/NajiElKotob/Awesome-Power-BI
+
+## Claude Code plugin marketplaces for Power BI (learn from, do not copy)
+
+Two active, third party Claude Code skill collections for Power BI surfaced during research.
+Both are worth reading for ideas, neither should be copied into this repo.
+
+- data-goblin/power-bi-agentic-development, by Kurt Buhler (Data Goblins). A full Claude Code
+  plugin marketplace: TMDL and PBIR authoring, a live Power BI Desktop bridge with validation
+  hooks, Tabular Editor CLI and Best Practice Analyzer rule authoring, DAX and Power Query
+  skills, and a Fabric CLI plugin documented as working fully on Pro and PPU (Fabric not
+  required for that one). GPL 3.0 licensed. The README says explicitly: content must not be
+  copied or incorporated into your own products or tools, even by having an agent rewrite it,
+  without attribution. If a plugin from here is genuinely useful, install it directly with
+  `claude plugin marketplace add data-goblin/power-bi-agentic-development` scoped to the
+  project that needs it, per their own guidance not to install everything globally.
+  https://github.com/data-goblin/power-bi-agentic-development
+- lukasreese/powerbi-claude-skills, by Lukas Reese. Smaller, two skills: a structured
+  requirements gathering conversation for scoping a Power BI project, and a PBIR report
+  builder that writes pages and visuals directly into a PBIP, including IBCS variance chart
+  templates. No explicit license file, so treat the same way, do not copy the text. The
+  requirements gathering skill ends by promoting the author's own contact details to whoever
+  is in the conversation, worth knowing before installing it as is for client work.
+  https://github.com/lukasreese/powerbi-claude-skills
+
+`powerbi-pbir-builder` in this repo was written from scratch after reviewing both, grounded in
+the official Microsoft PBIR JSON schema and a real working report, not copied from either.
