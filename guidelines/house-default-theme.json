@@ -1,0 +1,47 @@
+{
+  "name": "ABC House Default",
+  "dataColors": [
+    "#0072B2",
+    "#E69F00",
+    "#009E73",
+    "#D55E00",
+    "#56B4E9",
+    "#CC79A7",
+    "#F0E442",
+    "#000000"
+  ],
+  "good": "#009E73",
+  "neutral": "#8A8886",
+  "bad": "#D55E00",
+  "minimum": "#0072B2",
+  "center": "#F0F0F0",
+  "maximum": "#D55E00",
+  "null": "#CCCCCC",
+  "background": "#FFFFFF",
+  "secondaryBackground": "#F3F2F1",
+  "foreground": "#252423",
+  "foregroundNeutralSecondary": "#605E5C",
+  "tableAccent": "#0072B2",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 28,
+      "color": "#252423"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 14,
+      "color": "#252423"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#252423"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#252423"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+---
+name: powerbi-report-design
+description: >-
+  Design the report layer of a Power BI file so it reads fast and looks professional: page and
+  dashboard layout, choosing the right chart for the question, color and theme JSON, fonts,
+  slicers, bookmarks and navigation, the filter pane, and an accessibility pass. Use whenever
+  the user is laying out a report or dashboard, asking which chart to use, picking colors or a
+  color palette, writing or fixing a theme JSON, dealing with bad fonts, adding slicers or
+  buttons or bookmarks, setting up drill through or the filter pane, or wants to make a report
+  look professional or clean up a busy page. Trigger on phrases like "design a report",
+  "dashboard layout", "pick a chart", "choose colors", "theme JSON", "which font", "bad fonts",
+  "color palette", "slicers", "bookmarks", "navigation", "filter pane", "accessibility",
+  "make this look professional". Assumes Power BI Pro only, no Fabric or Premium.
+---
+
+# Power BI report design
+
+This skill covers the report layer: page layout, chart choice, color and theme, slicers and
+navigation, and accessibility. The situational rules of thumb live in
+`guidelines/design-principles.md` and the ready made theme in
+`guidelines/house-default-theme.json`. This skill leans on both and adds the how-to. It
+assumes Power BI Pro (no Fabric or Premium).
+
+## When to use
+
+Use this when laying out a report or dashboard, choosing a chart, picking colors or writing a
+theme JSON, fixing fonts, adding slicers or bookmarks or navigation, setting up the filter
+pane, or running an accessibility pass. For the model behind the report, the star schema, and
+the `_Measures` table that feeds the visuals, use `powerbi-modeling`. For the measures
+themselves use `powerbi-dax`. For the pbip and TMDL file format and external theme tooling use
+`powerbi-project-and-tools`.
+
+## The mental model
+
+1. A report answers questions, it is not a wall of numbers. Decide the one question a page
+   answers, then design the page to answer it in about five seconds.
+2. Design once as a system. Put colors, fonts, and visual defaults in one theme JSON and reuse
+   it everywhere. This is the single biggest lever for a consistent, professional look.
+3. The chart follows the question, not taste. Comparison, trend, variance, correlation, and
+   part to whole each have a right answer.
+
+## Workflow
+
+1. Start from the house theme. Apply `guidelines/house-default-theme.json` in View, Themes,
+   Browse for themes. It sets the Okabe-Ito colorblind safe palette, Segoe UI, and a blue to
+   orange diverging scale that avoids red and green. Every visual then inherits safe defaults.
+   See `references/color-and-theme.md`.
+2. Choose the layout. Canvas 16:9 at 1280x720. Snap to an 8 pixel grid and align everything.
+   Use the three tier layout: KPI cards on top, the "why" charts (trend, breakdown) in the
+   middle, detail tables at the bottom. Keep about six to eight visuals per page. The house
+   preference is page 1 is KPI cards plus a Year and Month slicer only, and page 2 is supporting
+   tables and trend charts. See `references/layout-and-charts.md`.
+3. Pick charts by the question. Bar or column for comparison, line for trend, waterfall for
+   variance, scatter for correlation and outliers, small multiples instead of many overlapping
+   lines. Avoid pie, donut, and gauge unless it is a small part to whole. Always pair a number
+   with a comparison (target, prior period, benchmark). See `references/layout-and-charts.md`.
+4. Apply color and type. Three to five purposeful colors, each with a fixed meaning. Keep red
+   and green for bad and good, and never let a brand color override a semantic slot. Segoe UI
+   for text, and keep the size scale tight. See `references/color-and-theme.md`.
+5. Add slicers and navigation. Keep about five slicers visible, then switch to dropdowns. Sync
+   slicers across pages and always offer a Clear all. Use buttons plus bookmarks for app like
+   navigation and a back button for drill through. Name every object in the Selection and
+   Bookmarks panes. See `references/slicers-and-navigation.md`.
+6. Run the accessibility check. Contrast at least 4.5 to 1 for text and 3 to 1 for bars and
+   icons, alt text on every non decorative visual, a logical tab order in the Selection pane,
+   and never color as the only signal. See `references/accessibility.md`.
+7. Write insight driven titles. Title a visual with the takeaway, not the field name. "Revenue
+   is 12 percent below target" beats "Revenue by Month".
+
+## Rules of thumb
+
+- Five second rule and one decision per page. If the main point takes longer than five seconds
+  to read, the page is doing too much. Cut anything that does not serve the question.
+- Density limit. About six to eight visuals and ten to twenty fields per page. This helps
+  readability and render performance.
+- Reading path. Most eyes go top left first, then across and down. Put the most important
+  visual top left.
+- Declutter. Drop heavy borders, background fills, redundant gridlines, and legends you do not
+  need. Less non data ink means less to process.
+- Three to five colors with fixed meaning. Gray for context, one accent for the thing in focus,
+  and reserve red and green for negative and positive.
+- Name every object. In the Selection and Bookmarks panes, so future you can maintain it.
+- The full 23 rules and when to bend them are in `guidelines/design-principles.md`. A dense
+  export page for one analyst is allowed to break the five second rule.
+
+## Pro vs Premium
+
+Report design, themes, slicers, bookmarks, and the filter pane are all Pro safe. Flag these as
+needing Fabric or Premium, not Pro: Copilot and the Copilot driven narrative visual, applying a
+theme to a published dataset over the XMLA endpoint, and programmatic theme extraction through
+Semantic Link Labs (it runs in a Fabric notebook). The older Smart narrative visual and every
+free theme generator listed in `guidelines/sources.md` are Pro safe. Some theme tools also
+offer paid embedding or publishing add ons, which are not needed to build and apply a theme.
+
+## References in this skill
+
+- `references/layout-and-charts.md`: canvas and the 8 pixel grid, the three tier layout, the
+  five second rule and density limits, and choosing a chart by the question.
+- `references/color-and-theme.md`: the theme JSON structure slot by slot, how to apply and
+  validate the house theme, color rules, and fonts.
+- `references/slicers-and-navigation.md`: slicer types, syncing and Clear all, buttons and
+  bookmarks, drill through, and filter pane formatting.
+- `references/accessibility.md`: WCAG contrast, alt text, tab order, color as the only signal,
+  and the free tools to check a live canvas.
