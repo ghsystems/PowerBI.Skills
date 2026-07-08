@@ -1,38 +1,38 @@
 # install.ps1
-# Links every skill in this repo into your personal Claude Code skills folder so
-# Claude discovers them in any project. Re-run after a git pull to pick up changes.
-#
-# Symlinks need either Windows Developer Mode turned on, or an elevated (admin) shell.
-# If a symlink cannot be made, the script falls back to a copy and tells you, in which
-# case you must re-run install.ps1 after each pull.
+# Installs the single router skill (powerbi-skills-repo) into your personal Claude Code
+# skills folder. That is the ONLY thing this repo puts into Claude on purpose. Every real
+# Power BI skill lives only under skills\ in this repo, and the router skill tells Claude to
+# read them straight from here whenever a Power BI task comes up, so there is never a stale
+# copy to update. Re-run after a git pull, though usually nothing changes here, since only
+# the router skill is installed, and its own content rarely changes.
 
 $ErrorActionPreference = "Stop"
-$repoSkills = Join-Path $PSScriptRoot "skills"
+$routerName = "powerbi-skills-repo"
+$source = Join-Path $PSScriptRoot $routerName
 $dest = Join-Path $env:USERPROFILE ".claude\skills"
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 
-foreach ($skill in Get-ChildItem -Path $repoSkills -Directory) {
-    $link = Join-Path $dest $skill.Name
+$link = Join-Path $dest $routerName
 
-    if (Test-Path $link) {
-        $item = Get-Item $link -Force
-        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
-            $item.Delete()
-        }
-        else {
-            Remove-Item -Recurse -Force $link
-        }
+if (Test-Path $link) {
+    $item = Get-Item $link -Force
+    if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+        $item.Delete()
     }
-
-    try {
-        New-Item -ItemType SymbolicLink -Path $link -Target $skill.FullName | Out-Null
-        Write-Output "linked  $($skill.Name)"
-    }
-    catch {
-        Copy-Item -Recurse -Force -Path $skill.FullName -Destination $link
-        Write-Output "copied  $($skill.Name)  (symlink failed, used a copy - re-run after pulls)"
+    else {
+        Remove-Item -Recurse -Force $link
     }
 }
 
+try {
+    New-Item -ItemType SymbolicLink -Path $link -Target $source | Out-Null
+    Write-Output "linked  $routerName"
+}
+catch {
+    Copy-Item -Recurse -Force -Path $source -Destination $link
+    Write-Output "copied  $routerName  (symlink failed, used a copy - re-run after editing this one file if it ever changes)"
+}
+
 Write-Output ""
-Write-Output "Done. Restart Claude Code or run /reload-skills to load the skills."
+Write-Output "Done. Restart Claude Code or run /reload-skills."
+Write-Output "Only '$routerName' is installed in Claude. Every other Power BI skill lives only in this repo's skills\ folder and is read on demand."

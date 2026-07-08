@@ -7,8 +7,15 @@ the `.gitignore` here has a note saying so.
 ## What this repo is
 
 A pack of Claude Code skills plus shared guidelines for building Power BI models and reports.
-The skills are meant to be installed into `~/.claude/skills` (via `install.ps1`) and used in
-any Power BI project. This repo is where they are authored, versioned, and evolved.
+This repo is where they are authored, versioned, and evolved.
+
+Only one thing from this repo is ever installed into Claude: the `powerbi-skills-repo`
+router skill (see `install.ps1`). Every real skill under `skills/` is read directly from
+this repo on demand, never copied into `~/.claude/skills`. This is intentional: it keeps
+Claude's global skill list small, and it means a skill edit here takes effect immediately,
+with nothing to keep in sync. Do not change this pattern (do not add per-skill install steps)
+without checking with Reza first, it was a deliberate choice over installing each skill
+individually.
 
 ## The one constant: Power BI Pro only
 
@@ -40,11 +47,13 @@ and re-verify against Microsoft Learn about once a year.
 
 ## Adding or updating a skill
 
-1. Create or edit `skills/<name>/SKILL.md` and its `references/`.
+1. Create or edit `skills/<name>/SKILL.md` and its `references/`. No install step needed,
+   Claude reads this repo directly through the router skill.
 2. Follow the writing rules above and keep the Pro lens.
-3. Run `.\install.ps1` so the change is linked into `~/.claude/skills`.
-4. Restart Claude Code or run `/reload-skills`.
-5. Commit with `.\sync.ps1 "message"`.
+3. If you added a brand new skill folder, no change to `install.ps1` or the router skill is
+   required either, the router tells Claude to list `skills/` live rather than working off a
+   fixed list.
+4. Commit with `.\sync.ps1 "message"`.
 
 ## Verify before committing
 

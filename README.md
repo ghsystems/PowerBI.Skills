@@ -1,12 +1,18 @@
 # PowerBI-Skills
 
 A personal pack of Claude Code skills plus research backed guidelines for building Power BI
-models and reports. This is the single source of truth for how we build Power BI. Point
-Claude at these skills in any project and it builds models the same, correct, well designed
-way every time.
+models and reports. This is the single source of truth for how we build Power BI.
 
 Everything here assumes Power BI Pro only. No Fabric, no Premium, only Dataflow Gen1. The
 guidance is written for that reality, including the traps that come with it.
+
+## How this installs (read this first)
+
+Only ONE skill is ever installed into Claude: `powerbi-skills-repo`. Its whole job is to
+point Claude at this repo whenever a Power BI task comes up. Every real skill below lives
+only under `skills/` in this repo and is read straight from here on demand, never copied
+anywhere. Edit a skill here, and Claude sees the change on its very next use, no re-install,
+no stale copies, nothing to keep in sync.
 
 ## Why this exists
 
@@ -16,7 +22,7 @@ to design a report that is readable and accessible, and which limits are Pro ver
 This repo captures that once, as skills Claude loads on demand, so it does not have to be
 re-learned per project.
 
-## The skills
+## The skills (read from the repo, not individually installed)
 
 | Skill | What it does | Example trigger |
 | --- | --- | --- |
@@ -40,17 +46,15 @@ The `guidelines/` folder holds reference material the skills lean on:
 
 ## Install
 
-The skills load once they live in your personal Claude skills folder.
-
 ```powershell
 git clone https://github.com/MrezaGHS/PowerBI-Skills.git C:\Users\<you>\source\repos\PowerBI-Skills
 cd C:\Users\<you>\source\repos\PowerBI-Skills
 .\install.ps1
 ```
 
-`install.ps1` links each skill in `skills/` into `~/.claude/skills`. Symlinks need Windows
-Developer Mode on, or an elevated shell. If a symlink cannot be made, the script copies the
-folder instead and tells you, in which case re-run `install.ps1` after each `git pull`.
+`install.ps1` installs only the `powerbi-skills-repo` router skill into `~/.claude/skills`.
+Nothing else from this repo is ever installed. When Claude needs a specific Power BI skill,
+it reads it directly from this repo's `skills/` folder, live, every time.
 
 Then restart Claude Code or run `/reload-skills`.
 
@@ -59,8 +63,11 @@ Then restart Claude Code or run `/reload-skills`.
 ```powershell
 cd C:\Users\<you>\source\repos\PowerBI-Skills
 git pull
-.\install.ps1   # only needed if install.ps1 had to copy instead of symlink
 ```
+
+No re-install needed after a pull. Editing or adding a skill under `skills/` takes effect
+immediately, since Claude reads it fresh each time rather than from an installed copy. You
+only need to re-run `install.ps1` if you ever change the router skill itself.
 
 ## Keep it local
 
