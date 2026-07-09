@@ -100,7 +100,7 @@ the rules above, not against them.
 - Plain-English tooltips. Every non-obvious chart or table carries a short tooltip that says, in
   plain words, what it shows, so a reader gets it immediately and a future maintainer is not left
   guessing. Short but complete.
-- KPI card style. Compact grey fill (the secondaryBackground slot) with a dark border, a touch
+- KPI card style. Compact gray fill (the secondaryBackground slot) with a dark border, a touch
   smaller than the full slot, and always a comparison versus the prior or latest month with an
   arrow, a sign, and a semantic color. Color encodes good versus bad, never up versus down. A
   metric that rose but is bad (open critical vulnerabilities) shows an up arrow in the bad color.

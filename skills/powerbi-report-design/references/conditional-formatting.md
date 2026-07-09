@@ -5,7 +5,7 @@ How to color a visual by its values, and, first, when not to.
 ## It is opt-in, not automatic
 
 Default to a clean, uncolored table or chart. Conditional formatting is a tool for a specific
-job, not a finishing coat you apply to everything. Colouring every visual wastes effort and
+job, not a finishing coat you apply to everything. Coloring every visual wastes effort and
 dilutes attention, because when everything is colored nothing stands out.
 
 So the rule is: build the visual plain, then ask the user whether this specific visual should
@@ -19,7 +19,7 @@ that fits the question, rather than coloring for its own sake.
 
 - Threshold flag. Rules mode, for example anything below 80 percent turns bad, at or above turns
   good. Best when there is a known target.
-- Highlight the exceptions only. Colour just the 100 percent rows, or just the worst, and leave
+- Highlight the exceptions only. Color just the 100 percent rows, or just the worst, and leave
   the rest plain. Draws the eye to what matters.
 - Top or bottom N. Rank driven emphasis when the reader wants the leaders or the laggards.
 - Magnitude heatmap. A gradient across a range, for a matrix of one measure where the shape is
@@ -47,23 +47,23 @@ Every conditional format is one of three modes, chosen in the Format by dropdown
 3. Field value. A measure returns the color directly. The most flexible, and the house default
    for anything semantic, because the logic lives in DAX and travels with the model.
 
-## The field value pattern (house default for status)
+## The field value pattern (measure-driven color)
 
-Write a measure that returns a color, then bind it as the Field value. Return the theme color
-NAMES, not raw hex, so a later palette change in the theme JSON propagates everywhere.
+Write a measure that returns a color, then bind it as the Field value. The measure must return a
+value from the CSS color spec, a hex code like `#009E73`, an RGB, RGBA, HSL, or HSLA value, or a
+CSS color name like `Green`. Theme slot names like `good` or `bad` are NOT valid here, they render
+nothing, so reference the house theme's hex values directly and keep them in one place so a theme
+change is a single find and replace.
 
 ```DAX
 SLA Status Color =
 SWITCH (
     TRUE (),
-    [SLA Compliance] >= 0.95, "good",
-    [SLA Compliance] >= 0.90, "neutral",
-    "bad"
+    [SLA Compliance] >= 0.95, "#009E73",  -- good
+    [SLA Compliance] >= 0.90, "#8A8886",  -- neutral
+    "#D55E00"                             -- bad
 )
 ```
-
-`"good"`, `"neutral"`, and `"bad"` resolve to the theme's sentiment slots (green, grey, orange in
-the house theme). Return a hex string instead only when you need a color outside those slots.
 
 Two traps:
 
@@ -72,23 +72,28 @@ Two traps:
 - A calculation group in the model can silently break a field value color measure, because it
   turns the measure into a variant. Test the color after adding any calc group.
 
+If you want the color to follow the theme automatically instead of hardcoding hex, use Rules or
+Gradient mode and pick the theme swatches in the dialog, those track the theme. Field value trades
+that for full measure-driven logic.
+
 ## Choose the ramp by meaning, and never red to green
 
 - For a signed magnitude that diverges around a midpoint (variance above and below zero), use the
-  theme's divergent slots, `minColor`, `midColor`, `maxColor`. In the house theme that runs blue
-  to a light center to orange.
+  theme's divergent slots, `minimum`, `center`, `maximum`. In the house theme that runs blue to a
+  light center to orange.
 - For a good to bad status scale (compliance, health, pass rate), drive it from the `good`,
-  `neutral`, `bad` sentiment slots (green, grey, orange), through Rules or a Field value measure.
+  `neutral`, `bad` sentiment colors, through Rules where you pick the swatches, or a Field value
+  measure that returns their hex.
 - Both deliberately avoid a true red to green ramp, which is the pairing most colorblind readers
   cannot tell apart. The house `bad` is a red orange for exactly this reason.
 
 ## Theme JSON cannot carry the rules
 
 A theme file sets the default colors the conditional formatting dialog offers (the `good`,
-`neutral`, `bad`, and the divergent `minColor`, `midColor`, `maxColor`, `nullColor` slots), but a
-theme cannot store the conditional formatting rules or thresholds themselves. Those are applied
-per visual. So the theme gives you consistent colors to point at, and the semantic logic lives
-in a Field value measure or in Rules on the visual. See `references/color-and-theme.md`.
+`neutral`, `bad` sentiment slots and the divergent `minimum`, `center`, `maximum`, `null` slots),
+but a theme cannot store the conditional formatting rules or thresholds themselves. Those are
+applied per visual. So the theme gives you consistent colors to point at, and the semantic logic
+lives in a Field value measure or in Rules on the visual. See `references/color-and-theme.md`.
 
 ## Data bars, icons, and blanks
 
@@ -104,7 +109,7 @@ in a Field value measure or in Rules on the visual. See `references/color-and-th
 
 ## Accessibility
 
-- Colour is never the only cue. Pair a background color with an icon, a data label, or a text
+- Color is never the only cue. Pair a background color with an icon, a data label, or a text
   tag, so the message survives for a colorblind reader and in grayscale.
 - Watch contrast on colored cells. Black text on a saturated `bad` orange fill can fall under
   4.5 to 1. If it does, add a Font color conditional format so the text flips to white on the
@@ -118,6 +123,6 @@ Nothing here needs Fabric or Premium.
 
 ## Sources
 
-Microsoft Learn on conditional table formatting, conditional formatting in visuals, and the
-tips for color, plus Havens Consulting and SQLBI on field value patterns and Excelerator BI on
-icons. Full links in `guidelines/sources.md`.
+Microsoft Learn on conditional table formatting, conditional formatting in visuals, and the tips
+for color formatting, plus Havens Consulting on report design and Excelerator BI on icons. Full
+links in `guidelines/sources.md`.

@@ -23,9 +23,9 @@ Ranks what actually moves a metric. You give it a metric to Analyze and fields t
 it reports, for example, that priority being P1 makes a breach 3.2 times more likely.
 
 - Pro safe. The ranking runs on the local model with in engine machine learning, not Copilot.
-- Two real traps to document: it does not run on a DirectQuery model, and it breaks when the
-  model has calculation groups (which discourage the implicit measures it relies on). Both fail
-  quietly, so test it on the actual model.
+- Two real traps to document: it does not run on a DirectQuery model or an Analysis Services live
+  connection, and its categorical analysis is unavailable when the model has calculation groups
+  (they set Discourage Implicit Measures). Both fail quietly, so test it on the actual model.
 - Works for a categorical target (breach yes or no) and a continuous target (average resolve
   hours). Categorical is the easier read.
 
@@ -82,7 +82,7 @@ Generates a text summary of a visual or a page.
 | Visual | Pro safe | Needs Fabric or Premium |
 | --- | --- | --- |
 | Decomposition tree (with High/Low value AI) | Yes | No |
-| Key influencers | Yes (not on DirectQuery, not with calc groups) | No |
+| Key influencers | Yes (not on DirectQuery or AAS live, calc groups limit it) | No |
 | Native small multiples | Yes | No |
 | New Card visual (`cardVisual`) | Yes | No |
 | KPI visual | Yes | No |

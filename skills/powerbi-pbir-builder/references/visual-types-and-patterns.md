@@ -259,8 +259,9 @@ The report-design skill covers the design side of these. A few notes for authori
   formatting object. They are capped at 5 per visual and 52 points, and they limit a matrix to 25
   columns. See the report-design `references/tables-and-matrix.md`.
 - Conditional formatting is applied per visual, a theme cannot store the rules. Drive a semantic
-  color from a model measure that returns a hex string or a theme color name (`"good"`, `"bad"`),
-  then bind it as the field value. See the report-design `references/conditional-formatting.md`,
+  color from a model measure that returns a hex string or a CSS color name (a theme slot name like
+  `"good"` will not resolve here), then bind it as the field value. See the report-design
+  `references/conditional-formatting.md`,
   and note it is opt-in, do not add it unless the user asked.
 - Native small multiples is a `Small multiples` projection role on a cartesian chart (bar, column,
   line, area), not a separate visual type.

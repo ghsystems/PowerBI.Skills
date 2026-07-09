@@ -74,8 +74,9 @@ These run their intelligence in the Power BI engine on the local model, so they 
 
 - Decomposition tree, including its High value and Low value AI splits: Pro. In-engine, not
   Copilot.
-- Key influencers: Pro. In-engine machine learning. Two limits: it does not run on a DirectQuery
-  model, and it breaks when the model has calculation groups.
+- Key influencers: Pro. In-engine machine learning. Limits: it does not run on a DirectQuery model
+  or an Analysis Services live connection, and its categorical analysis needs implicit measures, so
+  calculation groups disable that mode.
 - Native small multiples: Pro. A formatting toggle on the cartesian charts, not a separate visual.
 - The new card visual (`cardVisual`, general availability November 2025, replaces the old Card
   and Multi-row card) and the KPI visual: Pro.
