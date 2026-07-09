@@ -35,9 +35,10 @@ and adds the how-to detail.
 ## Color
 
 10. Three to five purposeful colors per page. Give each a consistent meaning. Gray for
-    context, one accent for the thing in focus, and reserve red and green for negative and
-    positive. Never let a brand color override a semantic meaning (do not make "bad" blue
-    just because blue is the brand).
+    context, one accent for the thing in focus, and reserve the semantic good and bad slots
+    (green and a red orange) for positive and negative. Avoid a true red to green pairing,
+    which many colorblind readers cannot tell apart. Never let a brand color override a
+    semantic meaning (do not make "bad" blue just because blue is the brand).
 11. Default to colorblind safe palettes. Okabe-Ito for categorical series, ColorBrewer
     colorblind safe sets for sequential and diverging. Test a palette in Viz Palette before
     you commit. See house-default-theme.json for the ready set.
@@ -63,7 +64,9 @@ and adds the how-to detail.
     not need. Less non data ink means lower cognitive load (Tufte, Knaflic).
 18. Slicers. Keep about five visible. Beyond that, switch to dropdowns. Sync slicers across
     pages where it helps, and always give the user a way to clear all. Match the question to
-    the slicer type (list, dropdown, between for numeric ranges, relative date for dates).
+    the slicer type (list, dropdown, between for numeric ranges, relative date for dates). For
+    dates the house rule is one Date slicer with a Year, Quarter, Month hierarchy, not separate
+    Year and Month slicers.
 19. Navigation. Use buttons plus bookmarks for an app like flow, and a back button for drill
     through. Name every object clearly in the Selection and Bookmarks panes so future you can
     maintain it.
@@ -80,6 +83,46 @@ and adds the how-to detail.
 23. Design once as a system. Encode colors, fonts, and visual defaults in one theme JSON and
     reuse it across pages and reports. This is Kurt Buhler's atomic design idea, and it is the
     single biggest lever for a consistent, professional look. See house-default-theme.json.
+
+## House conventions (confirmed with Reza)
+
+Settled preferences for how a report reads and how in-report text is written. They sit on top of
+the rules above, not against them.
+
+- One Date slicer. A single slicer on a Year, Quarter, Month hierarchy, never separate Year and
+  Month slicers. Keep a Clear all, and sync it across pages.
+- Month and year on date axes. Date axis labels and the date slicer read month and year, for
+  example "Jan 2026" (MMM yyyy). Use a clean MMM yyyy format where there is no exact built in.
+- In-report writing. Text inside a report (visual titles, labels, tooltips, table and matrix
+  headers) never uses an en dash or an em dash, use a hyphen, and never uses a semicolon. This is
+  the same house writing voice as the rest of this repo, applied to what lands on the canvas. No
+  real company name either, use "ABC Company".
+- Plain-English tooltips. Every non-obvious chart or table carries a short tooltip that says, in
+  plain words, what it shows, so a reader gets it immediately and a future maintainer is not left
+  guessing. Short but complete.
+- KPI card style. Compact gray fill (the secondaryBackground slot) with a dark border, a touch
+  smaller than the full slot, and always a comparison versus the prior or latest month with an
+  arrow, a sign, and a semantic color. Color encodes good versus bad, never up versus down. A
+  metric that rose but is bad (open critical vulnerabilities) shows an up arrow in the bad color.
+- Conditional formatting is opt-in. Default is a clean, uncolored table or chart. Ask before
+  adding any conditional formatting, heatmap, data bars, or status icons, because it is
+  situational and coloring everything wastes attention. When it is added, fit the pattern to the
+  question and keep it colorblind safe. See the report-design conditional-formatting reference.
+
+## Handling a crowded existing page (the declutter ladder)
+
+When an existing page carries too much, do not reflexively split it into more near-duplicate
+sheets. Work down this ladder. This decision is situational and always needs the user's approval
+per instance, it is never applied automatically:
+
+1. Cut what does not serve the page's one question.
+2. Move supporting detail into tooltips.
+3. Collapse many series into small multiples, or emphasize the one series that matters.
+4. Offer a field parameter or a slicer toggle so one visual serves several cuts.
+5. Use a bookmark toggle to swap between a chart view and a table view in the same space.
+6. Push row-level detail onto a drill through page.
+7. Only as a last resort, split into a new page, and only if that page answers a genuinely
+   different question.
 
 ## When to bend the rules
 

@@ -15,6 +15,10 @@ Match the slicer to the field and the question.
   amount or age. There are also greater than and less than variants.
 - Relative date. Filters a date field by a rolling window such as the last 30 days or this
   month to date. Use it for dates so the report follows the calendar without editing.
+- Date hierarchy. The house default for a date filter. One Date slicer bound to a Year, Quarter,
+  Month hierarchy, so the reader drills from year to quarter to month in a single control, rather
+  than separate Year and Month slicers. Format the display and the downstream axes as MMM yyyy,
+  for example "Jan 2026".
 - Tile or button style. A list styled as buttons. Good for a small, always visible choice like
   a two or three option toggle.
 
@@ -24,8 +28,8 @@ them into the filter pane, or the page turns into a control panel instead of a r
 ## Sync, and always a Clear all
 
 - Sync slicers across pages with View, Sync slicers. Tick the pages a slicer should apply to.
-  This is how the house Year and Month slicers on page 1 carry their selection to page 2. Sync
-  the fields that define the shared context, and leave page specific slicers unsynced.
+  This is how the house Date slicer on page 1 carries its selection to page 2. Sync the fields
+  that define the shared context, and leave page specific slicers unsynced.
 - Always give a way to clear. Add a button with the Clear all slicers action, or a bookmark
   that captures the cleared state. A user who cannot reset a filter is stuck.
 - Decide single or multi select per slicer. Single select keeps a clean one thing at a time

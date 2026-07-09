@@ -37,11 +37,12 @@ Put the single most important visual top left.
 
 ## The house page layout preference
 
-- Page 1 is the summary. KPI cards across the top, plus a Year slicer and a Month slicer, and
-  nothing else. No detail tables on page 1. It answers "how are we doing" at a glance.
+- Page 1 is the summary. KPI cards across the top, plus one Date slicer (a single Year, Quarter,
+  Month hierarchy slicer, not separate Year and Month), and nothing else. No detail tables on
+  page 1. It answers "how are we doing" at a glance.
 - Page 2 is the support. Trend charts and the detail tables that explain the KPIs on page 1.
-- Sync the Year and Month slicers across both pages so the filter context carries over. See
-  `references/slicers-and-navigation.md`.
+- Sync the Date slicer across both pages so the filter context carries over, and keep a Clear all.
+  See `references/slicers-and-navigation.md`.
 
 ## Choose the chart by the question
 
@@ -58,6 +59,9 @@ part to whole, distribution).
 | Part to whole | Stacked bar or treemap | Pie or donut only for a small part to whole with fewer than about eight slices. |
 | Many series over time | Small multiples grid | A grid of small charts beats overlapping spaghetti lines. |
 | Distribution of values | Histogram, or a column with a binned axis | Shows spread and shape, not just an average. |
+| Hierarchy or cross tab of values | Matrix (`pivotTable`) | Rows against columns, subtotals, expand and collapse. See `references/tables-and-matrix.md`. |
+| A flat list of records | Table (`tableEx`) | Exact values, one row per item, no hierarchy. |
+| Why is the number what it is | Decomposition tree or key influencers | Pro safe native AI visuals. See `references/analytical-visuals.md`. |
 
 ## Rules that keep charts honest
 
@@ -69,6 +73,11 @@ part to whole, distribution).
   categories. They are hard to read and waste space. A sorted bar almost always beats a pie.
 - Insight driven titles. Title a visual with the takeaway, not the field name. "Tickets closed
   fell 8 percent last month" beats "Count of Tickets by Month".
+- Read dates as month and year. Format a date axis and the date slicer as MMM yyyy, for example
+  "Jan 2026", everywhere from the slicer to the bottom of the chart.
+- Give it a plain-English tooltip. Every non-obvious chart carries a short tooltip that says what
+  it shows in plain words, so a reader gets it at a glance and a future maintainer is not left
+  guessing.
 - Declutter each visual. Turn off redundant gridlines, drop the legend when the series is
   obvious, and remove borders and fills that carry no data.
 

@@ -34,9 +34,10 @@ to the actual content, but keep every value a multiple of 8 so visuals line up c
 | Bottom right | 648 | 432 | 608 | 256 |
 
 This matches the house page layout preference in `powerbi-modeling`: page 1 is KPI cards plus
-a Year and Month slicer only, page 2 is supporting tables and trend charts. For page 1, drop
-the content area and add one or two slicers instead, sized about 150 wide by matching the KPI
-row height, placed to the right of the KPI cards or in a thin strip above them.
+one Date slicer (a Year, Quarter, Month hierarchy) only, page 2 is supporting tables and trend
+charts. For page 1, drop the content area and add the single Date slicer instead, sized about 150
+wide by matching the KPI row height, placed to the right of the KPI cards or in a thin strip above
+them.
 
 ## Z order convention
 

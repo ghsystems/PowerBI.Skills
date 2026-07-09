@@ -101,11 +101,13 @@ table, then Table tools, Mark as date table, and point it at the date column.
 Report layout is the report-design skill's job, but the house default that pairs with this model
 is worth stating so the model supports it:
 
-- Page 1 is the summary: KPI cards plus a Year slicer and a Month slicer, nothing else.
+- Page 1 is the summary: KPI cards plus one Date slicer (a Year, Quarter, Month hierarchy, not
+  separate Year and Month slicers), nothing else.
 - Page 2 is the supporting detail: the tables and the trend charts.
 
-For the model, that means clean measures for the KPI cards and a proper marked Date table so the
-Year and Month slicers work. For the actual layout, slicer choices, and visuals, see
+For the model, that means clean measures for the KPI cards and a proper marked Date table with a
+Year, Quarter, Month hierarchy so the Date slicer works. For the actual layout, slicer choices,
+and visuals, see
 `powerbi-report-design` and `guidelines/design-principles.md`.
 
 ## Quick checklist

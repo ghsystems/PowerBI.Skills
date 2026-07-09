@@ -67,6 +67,27 @@ or Premium, which we do not have.
   it fresh in Desktop, then move relationships, measures, and visuals over and delete the old
   table. See the project-and-tools skill.
 
+## Analytical and AI visuals: what is Pro safe
+
+The native analytical and AI visuals confuse people, because "AI" sounds like Copilot. It is not.
+These run their intelligence in the Power BI engine on the local model, so they are Pro safe.
+
+- Decomposition tree, including its High value and Low value AI splits: Pro. In-engine, not
+  Copilot.
+- Key influencers: Pro. In-engine machine learning. Limits: it does not run on a DirectQuery model
+  or an Analysis Services live connection, and its categorical analysis needs implicit measures, so
+  calculation groups disable that mode.
+- Native small multiples: Pro. A formatting toggle on the cartesian charts, not a separate visual.
+- The new card visual (`cardVisual`, general availability November 2025, replaces the old Card
+  and Multi-row card) and the KPI visual: Pro.
+- Q&A visual: Pro today, but on a retirement path (around December 2026), replaced by Copilot. Do
+  not build new work on it.
+- Smart narrative: Custom mode (you author the dynamic text) is Pro. Copilot authored narrative
+  needs Fabric or Premium.
+
+The report-design skill's `references/analytical-visuals.md` has the how-to and a Pro vs Fabric
+table.
+
 ## Sources
 
 - Configure incremental refresh and real-time data: https://learn.microsoft.com/en-us/power-bi/connect-data/incremental-refresh-overview
