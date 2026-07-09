@@ -2,7 +2,8 @@
 name: powerbi-report-design
 description: >-
   Design the report layer of a Power BI file so it reads fast and looks professional: page and
-  dashboard layout, choosing the right chart for the question, color and theme JSON, fonts,
+  dashboard layout, choosing the right chart for the question, table and matrix design,
+  conditional formatting, tooltips, native analytical visuals, color and theme JSON, fonts,
   slicers, bookmarks and navigation, the filter pane, and an accessibility pass. Use whenever
   the user is laying out a report or dashboard, asking which chart to use, picking colors or a
   color palette, writing or fixing a theme JSON, dealing with bad fonts, adding slicers or
@@ -10,7 +11,9 @@ description: >-
   look professional or clean up a busy page. Trigger on phrases like "design a report",
   "dashboard layout", "pick a chart", "choose colors", "theme JSON", "which font", "bad fonts",
   "color palette", "slicers", "bookmarks", "navigation", "filter pane", "accessibility",
-  "make this look professional". Assumes Power BI Pro only, no Fabric or Premium.
+  "table design", "matrix", "conditional formatting", "heatmap", "data bars", "tooltip",
+  "decomposition tree", "key influencers", "small multiples", "make this look professional".
+  Assumes Power BI Pro only, no Fabric or Premium.
 ---
 
 # Power BI report design
@@ -48,15 +51,21 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
 2. Choose the layout. Canvas 16:9 at 1280x720. Snap to an 8 pixel grid and align everything.
    Use the three tier layout: KPI cards on top, the "why" charts (trend, breakdown) in the
    middle, detail tables at the bottom. Keep about six to eight visuals per page. The house
-   preference is page 1 is KPI cards plus a Year and Month slicer only, and page 2 is supporting
-   tables and trend charts. See `references/layout-and-charts.md`.
+   preference is page 1 is KPI cards plus one Date slicer only (a single Year, Quarter, Month
+   hierarchy slicer, not separate Year and Month), and page 2 is supporting tables and trend
+   charts. See `references/layout-and-charts.md`.
 3. Pick charts by the question. Bar or column for comparison, line for trend, waterfall for
    variance, scatter for correlation and outliers, small multiples instead of many overlapping
    lines. Avoid pie, donut, and gauge unless it is a small part to whole. Always pair a number
-   with a comparison (target, prior period, benchmark). See `references/layout-and-charts.md`.
-4. Apply color and type. Three to five purposeful colors, each with a fixed meaning. Keep red
-   and green for bad and good, and never let a brand color override a semantic slot. Segoe UI
-   for text, and keep the size scale tight. See `references/color-and-theme.md`.
+   with a comparison (target, prior period, benchmark). Use a table for a flat list and a matrix
+   for a hierarchy or cross tab, and reach for the Pro safe native analytical visuals
+   (decomposition tree, key influencers) when the question is "why". See
+   `references/layout-and-charts.md`, `references/tables-and-matrix.md`, and
+   `references/analytical-visuals.md`.
+4. Apply color and type. Three to five purposeful colors, each with a fixed meaning. Use the good
+   and bad slots (green and orange) for good and bad and avoid a true red to green pairing, and
+   never let a brand color override a semantic slot. Segoe UI for text, and keep the size scale
+   tight. See `references/color-and-theme.md`.
 5. Add slicers and navigation. Keep about five slicers visible, then switch to dropdowns. Sync
    slicers across pages and always offer a Clear all. Use buttons plus bookmarks for app like
    navigation and a back button for drill through. Name every object in the Selection and
@@ -64,7 +73,11 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
 6. Run the accessibility check. Contrast at least 4.5 to 1 for text and 3 to 1 for bars and
    icons, alt text on every non decorative visual, a logical tab order in the Selection pane,
    and never color as the only signal. See `references/accessibility.md`.
-7. Write insight driven titles. Title a visual with the takeaway, not the field name. "Revenue
+7. Add tooltips, and conditional formatting only if asked. Give every non-obvious chart or table
+   a short plain-English tooltip that says what it shows, so a future reader gets it at a glance.
+   Conditional formatting is opt-in: build the visual plain, then ask the user before adding any
+   color, heatmap, data bars, or icons. See `references/conditional-formatting.md`.
+8. Write insight driven titles. Title a visual with the takeaway, not the field name. "Revenue
    is 12 percent below target" beats "Revenue by Month".
 
 ## Rules of thumb
@@ -85,12 +98,16 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
 
 ## Pro vs Premium
 
-Report design, themes, slicers, bookmarks, and the filter pane are all Pro safe. Flag these as
-needing Fabric or Premium, not Pro: Copilot and the Copilot driven narrative visual, applying a
-theme to a published dataset over the XMLA endpoint, and programmatic theme extraction through
-Semantic Link Labs (it runs in a Fabric notebook). The older Smart narrative visual and every
-free theme generator listed in `guidelines/sources.md` are Pro safe. Some theme tools also
-offer paid embedding or publishing add ons, which are not needed to build and apply a theme.
+Report design, themes, slicers, bookmarks, the filter pane, tables, matrices, and conditional
+formatting are all Pro safe. The native analytical and AI visuals are Pro safe too, because their
+AI runs in the Power BI engine, not in Copilot: the decomposition tree (including its High and
+Low value AI), key influencers, native small multiples, the new card visual, and the KPI visual.
+See `references/analytical-visuals.md`. Flag these as needing Fabric or Premium, not Pro: Copilot
+and any Copilot authored narrative, applying a theme to a published dataset over the XMLA
+endpoint, and programmatic theme extraction through Semantic Link Labs (it runs in a Fabric
+notebook). Smart narrative in Custom mode and every free theme generator listed in
+`guidelines/sources.md` are Pro safe. The Q&A visual is Pro safe but is on a retirement path
+(around December 2026), so do not build new reports around it.
 
 ## References in this skill
 
@@ -102,3 +119,9 @@ offer paid embedding or publishing add ons, which are not needed to build and ap
   bookmarks, drill through, and filter pane formatting.
 - `references/accessibility.md`: WCAG contrast, alt text, tab order, color as the only signal,
   and the free tools to check a live canvas.
+- `references/tables-and-matrix.md`: table vs matrix, layouts and subtotals, native sparklines,
+  column width, and the scrollable table performance trap.
+- `references/conditional-formatting.md`: the opt-in rule, the three modes, the field value color
+  pattern, data bars and icons, and why the theme cannot store the rules.
+- `references/analytical-visuals.md`: the Pro safe native analytical and AI visuals, the
+  decomposition tree, key influencers, small multiples, and the new card and KPI visuals.

@@ -25,6 +25,8 @@ for your Desktop version, and reuse the `$schema` value it used.
 | Slicer | `slicer` | `Values` |
 | Donut or pie | `donutChart`, `pieChart` | `Category`, `Y` |
 | Scatter | `scatterChart` | `Category`, `X`, `Y`, `Size` (optional) |
+| Waterfall | `waterfallChart` | `Category`, `Y`, `Breakdown` (optional) |
+| KPI | `kpi` | `Indicator` (the value), `TrendAxis`, `Goals` (the target) |
 
 A field reference is always one of these two shapes:
 
@@ -240,3 +242,29 @@ Drive any conditional color on the card from a model measure that returns a hex 
 from the house theme's semantic colors, for example `IF ( [YoY %] >= 0, "#009E73", "#D55E00" )`
 using the `good` and `bad` values from `guidelines/house-default-theme.json`, rather than a
 one off color choice.
+
+This `cardVisual` is the new card (general availability November 2025), which replaces the old
+Card and Multi-row card. It carries reference labels in the visual and can hold multiple cards at
+once, which the house KPI card uses to show a value with its delta versus the prior month.
+
+## Matrix, sparklines, conditional formatting, and the analytical visuals
+
+The report-design skill covers the design side of these. A few notes for authoring them in PBIR:
+
+- Matrix (`pivotTable`) uses `Rows`, `Columns`, `Values`. Its stepped layout, subtotals, and grand
+  totals are formatting objects on the visual, not query roles. Exact column widths are stored per
+  column as a `columnWidth` value. The reliable way to set them is to drag once in Desktop, save,
+  then read the written value back.
+- Native sparklines live inside a table or matrix as an extra measure projection with a sparkline
+  formatting object. They are capped at 5 per visual and 52 points, and they limit a matrix to 25
+  columns. See the report-design `references/tables-and-matrix.md`.
+- Conditional formatting is applied per visual, a theme cannot store the rules. Drive a semantic
+  color from a model measure that returns a hex string or a theme color name (`"good"`, `"bad"`),
+  then bind it as the field value. See the report-design `references/conditional-formatting.md`,
+  and note it is opt-in, do not add it unless the user asked.
+- Native small multiples is a `Small multiples` projection role on a cartesian chart (bar, column,
+  line, area), not a separate visual type.
+- The AI visuals, decomposition tree and key influencers, are Pro safe, their AI runs in the
+  engine, not Copilot. Their internal `visualType` and query role names are less documented and
+  less stable than the core charts, so generate one in Desktop, save, and read its `visual.json`
+  before authoring it in code. See the report-design `references/analytical-visuals.md`.

@@ -50,6 +50,33 @@ of mid 2026. Re-check yearly.
 - Zebra BI, dashboard design best practices, and IBCS (guidance free, Zebra visual is a paid add-in): https://zebrabi.com/power-bi-dashboard-design-mistakes/ and https://www.ibcs.com/
 - Storytelling with Data (Cole Nussbaumer Knaflic): https://www.storytellingwithdata.com/
 - Financial Times Visual Vocabulary, chart selection by intent: https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary
+- Havens Consulting (Reid Havens), report and dashboard design, table and matrix craft, and
+  conditional formatting. Mostly video, courses, and downloadable PBIX walk-throughs rather than
+  long written posts, and some are paid, but it is a top design source: https://www.havensconsulting.net/ and the blog at https://www.havensconsulting.net/blog-and-media
+
+## Tables, matrix, and conditional formatting
+
+- MS Learn, create a matrix visual: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-matrix-visual
+- MS Learn, matrix visual format settings (layouts, subtotals, stepped layout): https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-matrix-visual-format-settings
+- MS Learn, create and format table visualizations: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-tables
+- MS Learn, apply conditional table formatting (background, font color, data bars, icons, web URL, field value): https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-conditional-table-formatting
+- MS Learn, conditional formatting in Power BI visuals: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-conditional-formatting
+- MS Learn, tips and tricks for color formatting (the good, neutral, bad SWITCH example): https://learn.microsoft.com/en-us/power-bi/visuals/service-tips-and-tricks-for-color-formatting
+- MS Learn, sparklines in a table or matrix (5 per visual, 52 points, 25 column limits): https://learn.microsoft.com/en-us/power-bi/create-reports/power-bi-sparklines-tables
+- Tabular Editor blog, make better tables and matrixes, a written guide to cutting non data ink: https://tabulareditor.com/blog/make-better-tables-and-matrixes-in-power-bi-reports-a-comprehensive-guide
+- Data Bear, the newer matrix visual layouts explained: https://databear.com/new-matrix-visual-layouts-in-power-bi/
+- Excelerator BI (Matt Allington), conditional formatting with icons, including referencing icons by name: https://exceleratorbi.com.au/conditional-formatting-using-icons-in-power-bi/
+- Chris Webb, performance tuning table visuals, why an unfiltered table spools the whole result before it windows to the visible rows: https://blog.crossjoin.co.uk/2022/11/10/performance-tuning-table-visuals-with-filters-applied-in-power-bi/
+
+## Native analytical and AI visuals (all Pro safe unless noted)
+
+- MS Learn, decomposition tree, with its High and Low value AI splits: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-decomposition-tree
+- MS Learn, key influencers, in-engine machine learning, not Copilot: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-influencers
+- MS Learn, small multiples: https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-small-multiples
+- MS Learn, the new card visual (general availability November 2025, replaces Card and Multi-row card): https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-new-card
+- MS Learn, KPI visual (note it has no sort option, sort the data first): https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-kpi
+- MS Learn, Q&A visual (Pro, but retiring around December 2026, replaced by Copilot): https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-q-and-a
+- MS Learn, smart narrative (Custom mode is Pro, Copilot authored narrative needs Fabric): https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-smart-narrative
 
 ## Color and accessibility
 

@@ -41,6 +41,9 @@ often fails a client review. The rules of thumb are in `guidelines/design-princi
   told apart without relying on hue.
 - This is why the house theme uses a blue to orange diverging scale and keeps `bad` a red
   orange. Design the meaning to survive without color, then add color on top.
+- When you add conditional formatting to a table or matrix, follow the same rule: pair the color
+  with an icon or a text tag, and check that text on a saturated fill still passes contrast. See
+  `references/conditional-formatting.md`.
 
 ## Free tools to check a live canvas
 
