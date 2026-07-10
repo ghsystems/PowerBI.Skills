@@ -57,6 +57,10 @@ You write: `pages.json` (append to `pageOrder`), one `page.json` per new page, a
 7. If a visual does not render after reopening, valid JSON does not guarantee rendering. Check
    the field reference `Entity` and `Property` values match the model exactly (case
    sensitive), and that the visual is not sized to zero or cropped by its container.
+8. After any Desktop session on the project, re-read a file before editing it again. Desktop
+   rewrites every JSON file in its own formatting on save, it re-expands compact JSON, and hand
+   dragged visuals come back with fractional positions. Cached file content and string match
+   patterns from before the session are stale, and an exact string edit built on them will miss.
 
 ## Formatting: theme first, bespoke second
 

@@ -35,6 +35,13 @@ that fits the question, rather than coloring for its own sake.
 - Data bars, Icons, and Web URL are table and matrix only.
 - A line chart does not support conditional formatting on the line itself. Encode meaning another
   way there, for example a reference line or a separate flagged series.
+- For full red, yellow, green target zones behind a line (a compliance trend against 80, 90, and
+  100 percent thresholds), layer several y axis reference lines, each with its shade turned on
+  and a pale zone color. Later shades paint over earlier ones, so a 100 percent shade, then a 90,
+  then an 80 stack up into clean bands. Two gotchas from a live report. The shade paints over the
+  data line too, so set shade transparency to about 70 or the line disappears under the zones.
+  And keep the zone colors pale (for example #F8CBAD, #FFF2CC, #C6E0B4), full strength status
+  colors swallow the whole chart.
 
 ## The three modes
 

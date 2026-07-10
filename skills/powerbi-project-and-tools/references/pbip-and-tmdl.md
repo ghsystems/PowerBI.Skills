@@ -149,6 +149,13 @@ That keeps the aggregation correct and leaves every output column lineage free.
 - Windows path length. A pbip stores many nested files. The default Windows path limit is 260
   characters. Long table names in a deep folder can push a file path past the limit and fail the
   save. Keep the root folder path short.
+- The report side is the deep end of that limit. PBIR nests
+  `<project>.Report\definition\pages\<20 hex id>\visuals\<20 hex id>\visual.json`, which adds
+  roughly 70 characters beyond the project root before any file name. A project that saved fine
+  can fail to OPEN after being moved or copied to a deeper folder (a OneDrive backup folder is
+  the classic case). Desktop then shows "Issues were found", says it cannot read a visual.json,
+  and names the 260 character limit. The fix is to move the whole project folder to a short
+  local root, which also gets it out of OneDrive.
 - Restart to see external edits. Desktop does not watch the files. After you edit TMDL in VS
   Code, close and reopen Desktop to load the change.
 - Do not hand edit `diagramLayout.json` or the report layout files during preview. Those files
