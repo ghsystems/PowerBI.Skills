@@ -209,10 +209,11 @@ Shaped from a real working slicer. Genericize the table and field name.
 `isInvertedSelectionMode` on the `Categorical` filter, it is how a slicer represents "nothing
 excluded yet" internally, this is the real internal shape Desktop writes, keep it as shown.
 
-## KPI card, typical shape
+## KPI card, confirmed shape
 
-The general documented pattern (confirm the exact property names against a real
-Desktop-generated card in your project before shipping this to a client):
+Confirmed against a real Desktop generated card at visualContainer schema 2.10.0 in a live
+ABC Company report. The `Data` role carries the measure, and `displayName` on the projection
+is the label text the card shows next to the value.
 
 ```json
 "visual": {
@@ -221,22 +222,45 @@ Desktop-generated card in your project before shipping this to a client):
     "queryState": {
       "Data": {
         "projections": [{
-          "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Sales" } },
-          "queryRef": "_Measures.Total Sales",
-          "nativeQueryRef": "Total Sales"
-        }]
-      },
-      "ReferenceLabels": {
-        "projections": [{
-          "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Sales PY" } },
-          "queryRef": "_Measures.Total Sales PY",
-          "nativeQueryRef": "Total Sales PY"
+          "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "KPI Critical Label" } },
+          "queryRef": "_Measures.KPI Critical Label",
+          "nativeQueryRef": "KPI Critical Label",
+          "displayName": "Critical Vulnerabilities"
         }]
       }
     }
+  },
+  "objects": {
+    "value": [{
+      "properties": {
+        "fontSize": { "expr": { "Literal": { "Value": "10D" } } },
+        "horizontalAlignment": { "expr": { "Literal": { "Value": "'left'" } } },
+        "textWrap": { "expr": { "Literal": { "Value": "true" } } },
+        "fontColor": { "solid": { "color": { "expr": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "KPI Critical Color" } } } } }
+      },
+      "selector": { "id": "default" }
+    }],
+    "label": [{
+      "properties": {
+        "position": { "expr": { "Literal": { "Value": "'aboveValue'" } } },
+        "fontSize": { "expr": { "Literal": { "Value": "9D" } } }
+      },
+      "selector": { "id": "default" }
+    }]
   }
 }
 ```
+
+What the live confirmation established:
+
+- Entries under `objects.value` and `objects.label` each need `"selector": { "id": "default" }`.
+- The value `fontColor` accepts a `Measure` expression, so a field value color measure (a Text
+  measure returning a hex) drives the card font color. This is how the semantic good and bad
+  color reaches the card without a hardcoded hex in the report layer.
+- Watch overflow. A preformatted label string like `439 v -35 vs last month` clips at 13pt
+  inside a 200 by 112 card. 10pt plus `textWrap: true` fits with room to spare.
+- `ReferenceLabels` (a comparison value) and `AdditionalMeasure` (a change metric) remain the
+  documented extra roles for when the comparison is not baked into the measure string.
 
 Drive any conditional color on the card from a model measure that returns a hex string built
 from the house theme's semantic colors, for example `IF ( [YoY %] >= 0, "#009E73", "#D55E00" )`
