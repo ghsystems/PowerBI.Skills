@@ -269,3 +269,86 @@ The report-design skill covers the design side of these. A few notes for authori
   engine, not Copilot. Their internal `visualType` and query role names are less documented and
   less stable than the core charts, so generate one in Desktop, save, and read its `visual.json`
   before authoring it in code. See the report-design `references/analytical-visuals.md`.
+
+## Dynamic titles, bind a title to a measure
+
+A visual title does not have to be static text. Bind the title `text` to a measure that returns a
+string, and the title states the number in context and updates as the slicers change. This is how
+the insight driven titles the report-design skill asks for become live instead of frozen.
+
+Write the measure to return a string, and make it blank safe so it falls back to a plain label when
+there is no data in context:
+
+```
+Title Effort vs Estimate =
+VAR r = [Effort Ratio]
+RETURN
+IF (
+    ISBLANK ( r ) || r = 0,
+    "Actual vs estimated effort",
+    "Actual effort is " & FORMAT ( r, "0%" ) & " of the estimate"
+)
+```
+
+In the `visual.json`, set the title `text` to a measure reference instead of a literal. Only the
+`text` property changes, the rest of the title formatting stays as it was:
+
+```json
+"visualContainerObjects": {
+  "title": [
+    {
+      "properties": {
+        "show": { "expr": { "Literal": { "Value": "true" } } },
+        "text": {
+          "expr": {
+            "Measure": {
+              "Expression": { "SourceRef": { "Entity": "_Measures" } },
+              "Property": "Title Effort vs Estimate"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+The `Entity` and `Property` are the exact measure table and measure name, case sensitive, the same
+field reference shape used everywhere else in PBIR.
+
+### The grain trap, read this before you ship one
+
+A title is one string for the whole visual, so the title measure is evaluated at the visual total
+grain, not per category. That is fine for a measure that sums cleanly, like effort over estimate,
+where the total is a correct weighted ratio. It breaks for a per row ratio measure.
+
+The classic failure is a measure written as `DIVIDE ( SUM ( effort ), AVERAGE ( capacity ) )`. That
+is correct per person, but at the all people level it reads the sum of everyone's effort over one
+average capacity, so the title shows a number roughly the head count times too high. A ratio that
+should sit near 90 percent can render as over 1800 percent.
+
+Fix it by aggregating at the right grain inside the title measure:
+
+- If the ratio sums cleanly, use the weighted total, `DIVIDE ( SUM ( num ), SUM ( den ) )`.
+- If the ratio is per row and does not sum, average the per row values with `AVERAGEX` over the
+  entity, for example `AVERAGEX ( VALUES ( dim_owner[Owner] ), [Per Person Ratio] )`.
+
+The same grain trap applies to any measure shown as a single number, a card as much as a title.
+
+## Slicer sync groups
+
+The report-design skill covers syncing slicers across pages in Desktop. In PBIR that sync is stored
+on each slicer as a `syncGroup`. Slicers that share a group name and have field and filter changes
+turned on move together.
+
+```json
+"syncGroup": {
+  "groupName": "Company",
+  "fieldChanges": true,
+  "filterChanges": true
+}
+```
+
+Put `syncGroup` at the `visual` level, next to `visualType`. Group by the exact field, so a Company
+slicer on one fact does not drive a Company slicer built on a different table. Leave search box
+slicers (a `selfFilter` slicer) out of any group, they are usually page specific.

@@ -72,7 +72,10 @@ part to whole, distribution).
 - Avoid pie, donut, and gauge unless it is genuinely part to whole with fewer than about eight
   categories. They are hard to read and waste space. A sorted bar almost always beats a pie.
 - Insight driven titles. Title a visual with the takeaway, not the field name. "Tickets closed
-  fell 8 percent last month" beats "Count of Tickets by Month".
+  fell 8 percent last month" beats "Count of Tickets by Month". For a title that stays true as the
+  filters change, bind it to a measure that returns a string, a dynamic title. See the dynamic
+  titles section in the `powerbi-pbir-builder` skill, and mind the grain trap it describes, a per
+  row ratio measure overstates when it is read at the whole visual level.
 - Read dates as month and year. Format a date axis and the date slicer as MMM yyyy, for example
   "Jan 2026", everywhere from the slicer to the bottom of the chart.
 - Give it a plain-English tooltip. Every non-obvious chart carries a short tooltip that says what

@@ -81,6 +81,10 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
 - If the user wants a variance or actual versus plan style chart, that is a legitimate pattern
   (IBCS calls it a comparison chart), but use the house theme's colors for it, not a borrowed
   palette. See `powerbi-report-design` for the color rules.
+- A title or a card can be bound to a measure that returns a string, so it updates with the
+  filters. Watch the grain, the measure is read at the whole visual level, so a per row ratio
+  measure overstates unless you aggregate it (a weighted total, or `AVERAGEX` over the entity). See
+  `references/visual-types-and-patterns.md`.
 
 ## References in this skill
 
@@ -88,7 +92,8 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
   versus the files only Desktop can generate, and the full safe editing checklist.
 - `references/visual-types-and-patterns.md`: the visual type identifiers and query roles for
   the common chart types, with worked JSON examples for a KPI card, a trend chart, and a
-  slicer.
+  slicer, plus dynamic titles bound to a measure (and the grain trap that overstates them) and
+  slicer sync groups.
 - `references/layout-and-schema-versions.md`: canvas sizes, an 8 pixel grid layout table for
   common page compositions, z order convention, and how to detect the schema version already
   in use instead of hardcoding one.

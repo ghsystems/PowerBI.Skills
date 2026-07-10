@@ -78,7 +78,9 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
    Conditional formatting is opt-in: build the visual plain, then ask the user before adding any
    color, heatmap, data bars, or icons. See `references/conditional-formatting.md`.
 8. Write insight driven titles. Title a visual with the takeaway, not the field name. "Revenue
-   is 12 percent below target" beats "Revenue by Month".
+   is 12 percent below target" beats "Revenue by Month". For a title that stays true as filters
+   change, bind it to a measure that returns a string. See the `powerbi-pbir-builder` skill for the
+   shape and the grain caveat (a per row ratio measure overstates at the whole visual level).
 
 ## Rules of thumb
 
