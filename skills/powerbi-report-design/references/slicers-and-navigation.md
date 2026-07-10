@@ -29,7 +29,10 @@ them into the filter pane, or the page turns into a control panel instead of a r
 
 - Sync slicers across pages with View, Sync slicers. Tick the pages a slicer should apply to.
   This is how the house Date slicer on page 1 carries its selection to page 2. Sync the fields
-  that define the shared context, and leave page specific slicers unsynced.
+  that define the shared context, and leave page specific slicers unsynced. In code this sync is
+  stored on each slicer as a `syncGroup` with a shared group name, group by the exact field so two
+  slicers built on different tables do not cross drive. See the `powerbi-pbir-builder` skill for the
+  exact shape.
 - Always give a way to clear. Add a button with the Clear all slicers action, or a bookmark
   that captures the cleared state. A user who cannot reset a filter is stuck.
 - Decide single or multi select per slicer. Single select keeps a clean one thing at a time

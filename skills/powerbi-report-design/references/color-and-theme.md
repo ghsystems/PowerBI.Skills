@@ -31,6 +31,15 @@ out keeps the Power BI default. Microsoft groups the rest into four parts.
 4. Visual styles. Under `visualStyles`, set per visual defaults, for example turn off data
    labels on line charts or set a default gridline style. This is where a theme goes from a
    color swap to a real design system. Keep it lean and set only what you want to change.
+   A rule can target one visual type by name, not just the `*` wildcard. A useful pattern is a
+   subtle rounded border on every visual, turned off for the image visuals so a logo has no box:
+
+   ```json
+   "visualStyles": {
+     "*":     { "*": { "border": [ { "show": true, "radius": 8, "color": { "solid": { "color": "#E1DFDD" } } } ] } },
+     "image": { "*": { "border": [ { "show": false } ] } }
+   }
+   ```
 
 Note. You cannot put conditional formatting rules in a theme. The theme sets the gradient
 colors, but you still apply the rule on each visual.

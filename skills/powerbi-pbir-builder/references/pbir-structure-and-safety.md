@@ -69,6 +69,16 @@ Prefer putting color and font choices in the report's theme JSON, see
 `visual.json` files. A theme change updates every visual at once. A bespoke `visual.json`
 override only fixes one visual, and the next visual you add will not inherit it.
 
+## Watch for dead formatting from copy and paste
+
+When a visual is duplicated across pages, its bespoke formatting travels with it, including
+conditional formatting `dataPoint` rules whose selector points at a table or column that is not in
+this visual's query, or not in the model at all. These are dead overrides. They render nothing, but
+they are bespoke hex that fights the theme, and they pile up across a report that grew by copy and
+paste. When you inherit a report like this, strip any `dataPoint` or selector rule whose `Entity` is
+not a real table in the current model. Check the entity names against the TMDL before you delete, so
+you do not remove a rule that is only pointing at a renamed table.
+
 ## Why this is worth the caution
 
 The PBIR format has no built in guard rails against a broken reference or a malformed file,
