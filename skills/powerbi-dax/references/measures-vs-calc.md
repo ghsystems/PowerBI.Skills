@@ -76,24 +76,21 @@ transition. It is the single most important idea in DAX.
 Keep the wording simple when you explain it. CALCULATE says "take where I am right now and
 treat it as a filter".
 
-## The import to calculated table trap
+## Converting an import table into a calculated table
 
-You cannot convert an existing imported (M) table into a calculated table by editing the pbip
-or TMDL files by hand. Power BI Desktop validates the partition type on open and rejects the
-change with this error.
+You can convert an existing imported (M) table into a calculated table by editing the TMDL, but only
+if you clear the cached data first so Desktop builds the model fresh instead of morphing the loaded
+one. Swap the partition and reopen with the cache still there and it fails on open with
 
 ```
 PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC
 ```
 
-Swapping a table's partition from an M partition to a calculated (DAX) partition, or back, is
-blocked. The project will not open until you revert the edit.
+The trigger is the diff against `.pbi\cache.abf`, not the TMDL. Close Desktop, edit the partition to
+`= calculated` with a `source =` DAX expression, delete `.pbi\cache.abf`, reopen, then Refresh to
+rebuild. The GUI path (New table, move relationships, delete the old one) also works. The full method
+and the column lineage gotcha are in `powerbi-project-and-tools/references/pbip-and-tmdl.md`.
 
-To turn logic into a calculated table, do it inside Power BI Desktop instead.
-
-1. Create a new calculated table with the DAX you want. Give it a fresh name.
-2. Move relationships, measures, and dependent visuals onto the new table.
-3. Delete the old imported table.
-
-See `powerbi-project-and-tools` for the pbip and TMDL details and why hand editing the
-partition type fails.
+Do this only for derivative tables that roll up or reshape data already in the model. A calculated
+table recomputes every refresh and does not fold, so it is the right tool to stop a derivative table
+re-running its source pulls, not a way to avoid a real source pull.

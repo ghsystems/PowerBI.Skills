@@ -56,9 +56,11 @@ republish from Power BI Desktop. See `references/licensing-cheatsheet.md`.
 
 - TMDL is the source of truth for the model. The `.pbi\cache.abf` is just cached data, not the
   definition. Edit the `.tmdl` files, not the cache.
-- You cannot flip a table between an import (M) partition and a calculated (DAX) partition by
-  editing TMDL. Power BI rejects the whole project on open with error
-  `PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC`. See `references/pbip-and-tmdl.md`.
+- You can flip a table between an import (M) partition and a calculated (DAX) partition by editing
+  TMDL, but only if you delete `.pbi\cache.abf` first so Desktop rebuilds fresh from the TMDL.
+  Reopening with the cache in place fails on open with
+  `PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC`. This is the light way to kill refresh fan out. See
+  `references/pbip-and-tmdl.md`.
 - Keep the pbip repo out of a OneDrive or SharePoint synced folder. OneDrive plus git in one
   folder can corrupt the repo, and Desktop cannot save a pbip cleanly into a synced folder.
 - Pick the tool for the job. Bulk measure edits and the Best Practice Analyzer go to Tabular

@@ -79,26 +79,65 @@ of the data from the last edit, and it is git ignored. When you fix the model, y
 6. Reopen in Desktop to verify. If an edit is invalid, Desktop refuses to open the project and
    points at the file and location of the error.
 
-## The key gotcha: you cannot change a partition type by editing TMDL
+## Converting a table between M and calculated (DAX) by editing TMDL
 
-You cannot convert an existing table from an import (M) partition to a calculated (DAX)
-partition, or the other way, by editing the TMDL. Power BI validates the partition type on open
-and rejects the whole project with this error:
+You can flip a table between an import (M) partition and a calculated (DAX) partition by editing
+TMDL, but not while Desktop is holding the old model in memory. If you just swap the partition and
+reopen, Power BI tries to morph the cached model into the new one, and that specific change is not a
+legal in place edit. It rejects the whole project on open:
 
 ```text
 Changing the partition type from or to PartitionType.Calculated is not allowed
 ```
 
-The error code is `PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC`. The partition type is part of
-the table identity, so swapping an `= m` partition for an `= calculated` DAX partition on an
-existing table is not a supported edit.
+The error code is `PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC`. The trigger is the diff against the
+cached data in `.pbi\cache.abf`, not the TMDL itself.
 
-The supported path is heavy. Create the calculated table fresh in Desktop with New table and a
-DAX expression. Then move the relationships, measures, and any dependent visuals onto the new
-table, and delete the old one. That is a lot of manual rework, so it is usually not worth doing
-just to shave refresh time. If refresh speed is the goal, compute the column or table upstream in
-M or at the source instead. See `powerbi-data-and-refresh` and the calculated columns note in
-`guidelines/pro-vs-premium-facts.md`.
+The fix is to make Desktop build the model fresh from the TMDL instead of morphing the cache. This is
+the same cold load path a fresh git clone takes, since `cache.abf` is git ignored and absent on a
+clone.
+
+1. Close Desktop. Back up the pbip folder first.
+2. Edit the table's partition in its `.tmdl` file. For a calculated table use `partition <Table> =
+   calculated`, `mode: import`, and a `source =` DAX expression. Give each stored column
+   `isNameInferred` and `sourceColumn: [Name]` matching a column the DAX returns. Keep the existing
+   table and column `lineageTag` values so relationships, measures, and visuals stay bound.
+3. Delete `.pbi\cache.abf` (it is git ignored and only holds the last loaded data). Keep
+   `localSettings.json`, it holds the publish target binding.
+4. Reopen the pbip. With no cache, Desktop creates the database fresh from the TMDL, so the partition
+   type is set, not changed, and there is no error. The report opens with empty data.
+5. Refresh to rebuild the data, validate the numbers, then publish.
+
+Why bother. This is the light way to kill refresh fan out. A derivative table (one that only reshapes
+or rolls up tables already in the model) as an M partition re-runs its whole upstream pull chain on
+every refresh, which is a common cause of a slow or failing Pro refresh. As a calculated table it
+computes in memory from data already loaded, with no extra source calls. See
+`powerbi-data-and-refresh/references/folding-and-duplication.md`.
+
+Cautions. A calculated table still recomputes on every refresh and does not fold, so only convert
+derivative tables, never the source pulls themselves. If you would rather not touch TMDL, the GUI
+path also works: create a New table in Desktop with the DAX, move relationships and measures onto it,
+and delete the old one.
+
+## Calculated table columns keep source lineage
+
+When a calculated table column is a bare reference to another table's column, for example
+`"Sprint", src[Sprint]` inside SELECTCOLUMNS, the engine keeps that column's lineage back to the
+source column. It then will not accept your `sourceColumn: [Sprint]` declaration on the new table,
+the declared column drops, and any relationship built on it fails to load:
+
+```text
+Relationship '...' uses an invalid column ID 300
+```
+
+error code `PFE_TM_RELATIONSHIP_END_COLUMN_INVALID`.
+
+The fix is to make every passthrough column an expression, so it carries no lineage. Wrap the bare
+reference in `IF ( TRUE (), src[Sprint] )`. Same value and type, but now it is a fresh computed
+column that matches your `sourceColumn` declaration, and relationships bind. Do any aggregation
+(CALCULATE or SUMMARIZE roll ups) in an inner ADDCOLUMNS where the row context is intact, then wrap
+the result in an outer SELECTCOLUMNS that re-emits each column with the `IF ( TRUE (), ... )` trick.
+That keeps the aggregation correct and leaves every output column lineage free.
 
 ## Other traps
 

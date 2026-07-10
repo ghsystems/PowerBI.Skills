@@ -50,11 +50,14 @@ There is no free shared cache on Pro. The levers are:
    rather than re-shaping it again in three more loaded tables.
 3. `Table.Buffer` helps reuse a result WITHIN a single query evaluation (for example a lookup
    used many times in the same query). It does not help across separate loaded tables.
-4. A DAX calculated table can aggregate tables that are already loaded in memory, with no
-   source calls, so a pure roll up of already loaded tables does not need to re-run the
-   pipeline. Two cautions: a calculated table recomputes on every refresh and does not fold,
-   and you cannot convert an existing import table to a calculated table by editing the pbip
-   or TMDL. See `powerbi-project-and-tools` and `guidelines/pro-vs-premium-facts.md`.
+4. A DAX calculated table can aggregate or reshape tables that are already loaded in memory, with
+   no source calls, so a pure roll up of already loaded tables does not re-run the pipeline. This is
+   often the single biggest refresh win: converting a derivative M table that re-runs its upstream
+   pulls into a calculated table that computes in memory. Two cautions: a calculated table recomputes
+   on every refresh and does not fold, so convert only derivative tables, never the source pulls. You
+   can convert an existing import table to a calculated table by editing the TMDL, if you delete
+   `.pbi\cache.abf` first so Desktop rebuilds fresh from the TMDL. See `powerbi-project-and-tools`
+   and `guidelines/pro-vs-premium-facts.md`.
 5. Dataflows would materialize the staging once, but Dataflow Gen1 on Pro is unreliable when
    a refreshing model imports it (no orchestration, no folding). Treat it as a last resort
    and sequence it by hand. The clean version needs Fabric or Premium.
