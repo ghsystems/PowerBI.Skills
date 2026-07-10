@@ -1,7 +1,7 @@
 ---
 name: powerbi-skills-repo
 description: >-
-  Points to the PowerBI-Skills repo, the single source of truth for building, fixing, and
+  Points to the PowerBI.Skills repo, the single source of truth for building, fixing, and
   designing Power BI, Pro license only, no Fabric or Premium. Use whenever the task touches
   Power BI in any way: a pbix or pbip file, a semantic model, Power Query or M, connecting
   to a REST API or ServiceNow or SharePoint, a slow or failing refresh, star schema, facts
@@ -16,7 +16,7 @@ description: >-
   points to the repo, read the repo before doing the actual work.
 ---
 
-# Power BI: read the PowerBI-Skills repo first
+# Power BI: read the PowerBI.Skills repo first
 
 Do not rely on general knowledge or memory for Power BI work. This repo is the single
 source of truth for how Power BI gets built, kept current, and reviewed:

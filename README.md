@@ -1,4 +1,4 @@
-# PowerBI-Skills
+# PowerBI.Skills
 
 A personal pack of Claude Code skills plus research backed guidelines for building Power BI
 models and reports. This is the single source of truth for how we build Power BI.
@@ -47,7 +47,7 @@ The `guidelines/` folder holds reference material the skills lean on:
 ## Install
 
 ```powershell
-git clone https://github.com/MrezaGHS/PowerBI-Skills.git C:\Users\<you>\source\repos\PowerBI-Skills
+git clone https://github.com/MrezaGHS/PowerBI.Skills.git C:\Users\<you>\source\repos\PowerBI-Skills
 cd C:\Users\<you>\source\repos\PowerBI-Skills
 .\install.ps1
 ```
