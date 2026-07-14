@@ -46,7 +46,7 @@ Use this to document a model that already exists. To build or troubleshoot a mod
    diagram, the hard parts each linking to its deep dive, the layout, and a quiet closing
    line that identifiers are anonymized.
 8. Set up and push the repo on the Windows machine. `.gitignore` first, then init, commit,
-   push. After the first push use `sync.ps1` for daily commits.
+   push. After the first push, make further changes on a branch and open a pull request.
 
 ## Key rules
 

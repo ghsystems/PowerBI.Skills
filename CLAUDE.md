@@ -53,7 +53,22 @@ and re-verify against Microsoft Learn about once a year.
 3. If you added a brand new skill folder, no change to `install.ps1` or the router skill is
    required either, the router tells Claude to list `skills/` live rather than working off a
    fixed list.
-4. Commit with `.\sync.ps1 "message"`.
+4. Make the change on a branch and open a pull request, using the workflow below.
+
+## Daily changes via pull request
+
+Make each change on a branch and open a pull request. Do not commit straight to main.
+
+```powershell
+git checkout -b my-change
+# make your edits
+git add -A
+git commit -m "what changed"
+git push -u origin my-change
+gh pr create
+```
+
+Merge on GitHub after review.
 
 ## Verify before committing
 

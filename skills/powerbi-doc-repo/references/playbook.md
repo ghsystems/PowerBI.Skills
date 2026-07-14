@@ -23,7 +23,6 @@ knowledgebase/
     05_dimensions_and_calculated.md
     06_measures.md
 README.md                    the showcase front door
-sync.ps1                     one line push helper
 .gitignore
 ```
 
@@ -59,18 +58,19 @@ CLAUDE.md
 Never commit the pbix, pbip, or the exported model folders. They hold the real, unredacted
 data and code.
 
-## The sync.ps1
+## Daily changes via pull request
+
+After the first push, make each change on a branch and open a pull request. Do not commit
+straight to main. Merge on GitHub after review.
 
 ```powershell
-param([Parameter(Mandatory = $true)][string]$Message)
-Set-Location -Path $PSScriptRoot
+git checkout -b my-change
+# make your edits
 git add -A
-git status --short
-git commit -m $Message
-git push
+git commit -m "what changed"
+git push -u origin my-change
+gh pr create
 ```
-
-Use it after the first manual push for one command daily commits: `.\sync.ps1 "message"`.
 
 ## Redaction checklist (where Power BI hides real data)
 
@@ -129,8 +129,9 @@ git commit -m "Initial commit: redacted <model> knowledgebase"
 git push -u origin main
 ```
 
-Create the GitHub repo as Private first. After this first push, use `sync.ps1` for daily
-commits. Never run `git init` twice in the same folder.
+Create the GitHub repo as Private first. After this first push, make each change on a branch
+and open a pull request, then merge on GitHub after review. Never run `git init` twice in the
+same folder.
 
 ## Gotchas
 
