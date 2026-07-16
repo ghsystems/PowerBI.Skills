@@ -96,6 +96,29 @@ To get the exact direct URL, open the file location in the browser and use the p
 the file details pane copy the Path field. Avoid the share link with the `?e=` parameter, it
 is not a clean path.
 
+## Which method to use
+
+Default to the direct file read. When you know where the file lives, point at its exact URL.
+Most files stay put, so a fixed path keeps working and the refresh stays fast. This is the
+right choice almost every time.
+
+Use `SharePoint.Files` (the whole site crawl) only when one of these is true:
+- The file is expected to move or get renamed, so a fixed path would break.
+- You cannot get or keep the exact path, for example you are not in touch with the file owner
+  to confirm where it lives.
+
+Do not use the SharePoint REST API for a normal file read:
+
+```m
+// AVOID: REST GetFileById. The file id survives a move, but the credential test is fragile
+// and often fails with a 400 on the data source setup.
+Web.Contents("https://yourtenant.sharepoint.com/sites/Site",
+  [RelativePath = "_api/web/GetFileById('<file-id>')/$value"])
+```
+
+If you genuinely need a path that survives a move, weigh that one trade off against the setup
+pain before choosing it.
+
 ## Authentication notes (Pro)
 
 - ServiceNow REST: Basic (user and password) or OAuth. Set it once in Desktop, and again in
