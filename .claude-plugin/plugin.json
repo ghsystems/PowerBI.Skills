@@ -1,0 +1,11 @@
+{
+  "name": "powerbi-skills",
+  "version": "1.0.0",
+  "description": "Power BI Pro build skills. Seven focused skills for modeling, DAX, data and refresh, report design, PBIR authoring, project and tools, and documentation. Pro license only, no Fabric or Premium.",
+  "author": {
+    "name": "MrezaGHS",
+    "url": "https://github.com/MrezaGHS"
+  },
+  "repository": "https://github.com/MrezaGHS/PowerBI.Skills",
+  "skills": "./skills/"
+}

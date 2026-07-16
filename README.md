@@ -8,11 +8,10 @@ guidance is written for that reality, including the traps that come with it.
 
 ## How this installs (read this first)
 
-Only ONE skill is ever installed into Claude: `powerbi-skills-repo`. Its whole job is to
-point Claude at this repo whenever a Power BI task comes up. Every real skill below lives
-only under `skills/` in this repo and is read straight from here on demand, never copied
-anywhere. Edit a skill here, and Claude sees the change on its very next use, no re-install,
-no stale copies, nothing to keep in sync.
+This repo is a Claude Code plugin. Installing it registers every skill under `skills/`, and
+each one auto triggers on its matching Power BI work. Anyone on any Claude plan can install it
+straight from this GitHub repo with the two commands in the Install section below. No
+enterprise plan needed.
 
 ## Why this exists
 
@@ -22,7 +21,7 @@ to design a report that is readable and accessible, and which limits are Pro ver
 This repo captures that once, as skills Claude loads on demand, so it does not have to be
 re-learned per project.
 
-## The skills (read from the repo, not individually installed)
+## The skills
 
 | Skill | What it does | Example trigger |
 | --- | --- | --- |
@@ -46,28 +45,27 @@ The `guidelines/` folder holds reference material the skills lean on:
 
 ## Install
 
-```powershell
-git clone https://github.com/MrezaGHS/PowerBI.Skills.git C:\Users\<you>\source\repos\PowerBI-Skills
-cd C:\Users\<you>\source\repos\PowerBI-Skills
-.\install.ps1
+In Claude Code, add this repo as a plugin marketplace and install the plugin:
+
+```
+/plugin marketplace add MrezaGHS/PowerBI.Skills
+/plugin install powerbi-skills@powerbi-skills
 ```
 
-`install.ps1` installs only the `powerbi-skills-repo` router skill into `~/.claude/skills`.
-Nothing else from this repo is ever installed. When Claude needs a specific Power BI skill,
-it reads it directly from this repo's `skills/` folder, live, every time.
-
-Then restart Claude Code or run `/reload-skills`.
+That registers all seven skills, and each one auto triggers on its matching Power BI work.
+This works on any Claude plan, the repo just needs to be reachable (it is public).
 
 ## Update
 
-```powershell
-cd C:\Users\<you>\source\repos\PowerBI-Skills
-git pull
+Pull the latest skills from inside Claude Code:
+
+```
+/plugin update powerbi-skills
 ```
 
-No re-install needed after a pull. Editing or adding a skill under `skills/` takes effect
-immediately, since Claude reads it fresh each time rather than from an installed copy. You
-only need to re-run `install.ps1` if you ever change the router skill itself.
+To author or change a skill, edit under `skills/` on a branch, open a pull request, and bump
+the `version` in `.claude-plugin/plugin.json`. Installed copies pick up the change on the next
+`/plugin update`.
 
 ## Keep it local
 
