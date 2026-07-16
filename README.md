@@ -6,16 +6,35 @@ build Power BI.
 
 ## Install
 
-In Claude Code, add this repo as a plugin marketplace and install the plugin:
+This is a Claude Code plugin. It works anywhere you run Claude Code: the CLI, the VS Code or
+JetBrains extension, and the desktop app. It is not part of Cursor's own AI, but the terminal
+commands below run in any terminal, including the one inside Cursor or VS Code.
+
+The repo is public, so anyone can install it on any Claude plan, no enterprise needed.
+
+Terminal, the reliable way that works in every setup:
+
+```
+claude plugin marketplace add MrezaGHS/PowerBI.Skills
+claude plugin install powerbi-skills@powerbi-skills
+```
+
+Run those from a project folder, not your home directory. A git safety check can otherwise
+refuse to clone. Then `claude plugin list` should show `powerbi-skills` as enabled. Restart
+your Claude Code session so the skills load.
+
+Inside a Claude Code chat session, the interactive form also works:
 
 ```
 /plugin marketplace add MrezaGHS/PowerBI.Skills
 /plugin install powerbi-skills@powerbi-skills
 ```
 
-That registers all seven skills. Each one auto triggers on its matching Power BI work, on any
-Claude plan, no enterprise needed. The repo is public, so anyone you send it to installs the
-same way. Update later with `/plugin update powerbi-skills`.
+Enter one value per prompt in the dialog. The `/plugin` command is not available in every
+surface (the desktop app hides it), so use the terminal commands above if you do not see it.
+
+Once installed, all seven skills auto trigger on their matching Power BI work. Update later
+with `claude plugin update powerbi-skills` (or `/plugin update` in chat).
 
 ## Why this exists
 
