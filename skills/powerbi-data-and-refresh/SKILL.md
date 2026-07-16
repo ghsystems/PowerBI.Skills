@@ -55,7 +55,10 @@ For DAX use `powerbi-dax`. For the pbip and TMDL file format and external tools 
 - SharePoint file: use `Web.Contents("https://tenant.sharepoint.com/sites/Site/.../File.xlsx")`
   wrapped in `Excel.Workbook`. Do NOT use `SharePoint.Files("https://tenant.sharepoint.com/sites/Site")`
   for one file, because it enumerates every file in the whole site first and can run for
-  many minutes. This alone can cause a multi hour refresh.
+  many minutes. This alone can cause a multi hour refresh. Only reach for the site crawl when
+  the file will move or you cannot get a stable path. Do not use the REST `GetFileById` endpoint
+  for a normal read, its credential test is fragile. Full decision rule in
+  `references/connecting-to-sources.md`.
 - REST paging: a ServiceNow Table API or similar should page with `List.Generate`, order by
   a stable key (for ServiceNow, `ORDERBYsys_id`), stop as soon as a page returns fewer rows
   than the page size, and keep the row ceiling the same if you change the page size (page
