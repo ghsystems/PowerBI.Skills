@@ -25,7 +25,7 @@ the table, like any other column.
   compress as well in VertiPaq as columns that arrive with the data.
 - Prefer computing the column upstream in M (Power Query) or at the source. Those columns
   compress better and do not recompute on every refresh. See
-  `guidelines/pro-vs-premium-facts.md`.
+  `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 - Use a calculated column only when the value must physically exist on the row (to group by it,
   relate on it, or slice on it) AND it needs model or row context that M cannot give. An
   example is a value pulled across a relationship with RELATED, or a rank within the row's

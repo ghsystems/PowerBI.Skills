@@ -44,7 +44,7 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
 4. **Validate after writing.** Parse every JSON file you wrote before telling the user to
    reopen Desktop. A missing comma or bracket blocks the whole report from loading.
 5. **Prefer the theme over bespoke visual formatting.** Put color and font choices in the
-   report's theme JSON (see `guidelines/house-default-theme.json`) rather than repeating them
+   report's theme JSON (see `house-default-theme.json` in the `powerbi-report-design` skill) rather than repeating them
    in every `visual.json`. Change it once, it applies everywhere.
 
 ## Workflow
@@ -60,7 +60,7 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
 4. Pick the visual type and query roles for what the user wants. Read
    `references/visual-types-and-patterns.md` for the catalog and worked examples.
 5. Work out layout using `references/layout-and-schema-versions.md`, which follows the same
-   8 pixel grid as `guidelines/design-principles.md`.
+   8 pixel grid as `design-principles.md` in the `powerbi-report-design` skill.
 6. Write the files: the page folder, `page.json`, each visual's folder and `visual.json`,
    then update `pages/pages.json` to add the new page to `pageOrder`.
 7. Validate every JSON file you wrote parses cleanly.

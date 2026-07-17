@@ -17,7 +17,7 @@ description: >-
 This skill covers DAX: measures, the choice between a measure and a calculated column or
 table, and a set of correct, reusable patterns. It assumes Power BI Pro (no Fabric or
 Premium). For the calculated column and table cost and size facts, read
-`guidelines/pro-vs-premium-facts.md` in this repo.
+`pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## When to use
 
@@ -58,7 +58,7 @@ DAX Studio, the pbip and TMDL format, and the calculated table limitation use
 
 - Prefer a measure over a calculated column. Prefer a column computed upstream in M or at the
   source over a DAX calculated column, because it compresses better and does not recompute
-  every refresh. See `guidelines/pro-vs-premium-facts.md`.
+  every refresh. See `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 - A calculated column only earns its place when the value must exist on the row and needs model
   or row context that M cannot provide.
 - Calculated tables (a Date table, a bridge) are fine, but they recompute every refresh and do
@@ -79,8 +79,7 @@ DAX Studio, the pbip and TMDL format, and the calculated table limitation use
   of total, year over year, year to date, running totals, ranking, virtual relationships, and
   VAR, plus a common mistakes list.
 
-## Guidelines and sources
+## Shared facts
 
-- `guidelines/pro-vs-premium-facts.md`: the cost of calculated columns and tables, and the Pro
-  lens.
-- `guidelines/sources.md`: DAX Guide, DAX Patterns, and the SQLBI DAX hub.
+- `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill: the cost of calculated
+  columns and tables, and the Pro lens.

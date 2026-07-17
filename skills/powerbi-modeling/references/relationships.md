@@ -87,7 +87,7 @@ factless fact table). It holds one row per valid pair of keys:
 The bridge turns one awkward many to many into two clean one to many relationships. To make a
 filter cross the bridge from one dimension to the other you may need bidirectional filtering on
 one leg, or a measure using `CROSSFILTER`. Turn that on deliberately and test the totals. See the
-Microsoft many to many guidance in `guidelines/sources.md`.
+Microsoft many to many guidance in the curated source list in the PowerBI.Skills repo.
 
 Why the bridge beats a direct many to many relationship:
 - You control exactly where filters cross, one leg at a time.
@@ -110,7 +110,7 @@ Practical habits:
 - Check the fact for orphan keys (a key with no matching dimension row). Those show up as a blank
   member in visuals and are usually a data load bug.
 - Keep the key work in M or the source, not in DAX calculated columns. See
-  `guidelines/pro-vs-premium-facts.md`.
+  `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## Quick checklist
 

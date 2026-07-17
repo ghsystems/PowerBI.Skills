@@ -132,4 +132,4 @@ Nothing here needs Fabric or Premium.
 
 Microsoft Learn on conditional table formatting, conditional formatting in visuals, and the tips
 for color formatting, plus Havens Consulting on report design and Excelerator BI on icons. Full
-links in `guidelines/sources.md`.
+links in the curated source list in the PowerBI.Skills repo.

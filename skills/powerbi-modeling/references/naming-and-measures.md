@@ -30,7 +30,7 @@ real trap, not a style nit.
 
 Use `_Measures`. The leading underscore both avoids the reserved name and sorts the table to the
 top. Avoid the old trick of a leading space (`" Measures"`) as well, since recent Desktop
-validation rejects that too. See `guidelines/sources.md` for the write ups.
+validation rejects that too. See the curated source list in the PowerBI.Skills repo for the write ups.
 
 ## Never attach measures to data tables
 
@@ -94,7 +94,7 @@ table, then Table tools, Mark as date table, and point it at the date column.
 - Marking it as a date table makes time intelligence (`TOTALYTD`, `SAMEPERIODLASTYEAR`, and so on)
   behave correctly. See `powerbi-dax`.
 - Generate it in M or DAX. A DAX calculated Date table is fine and common, just keep it small. See
-  `guidelines/pro-vs-premium-facts.md` and `powerbi-project-and-tools`.
+  `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## Page layout (house preference)
 
@@ -108,7 +108,7 @@ is worth stating so the model supports it:
 For the model, that means clean measures for the KPI cards and a proper marked Date table with a
 Year, Quarter, Month hierarchy so the Date slicer works. For the actual layout, slicer choices,
 and visuals, see
-`powerbi-report-design` and `guidelines/design-principles.md`.
+the `powerbi-report-design` skill and its `design-principles.md` reference.
 
 ## Quick checklist
 

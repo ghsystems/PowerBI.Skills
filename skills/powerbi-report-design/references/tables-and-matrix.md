@@ -1,7 +1,7 @@
 # Tables and matrix
 
 How to build a Table or a Matrix that reads well and does not blow up render time. The rules of
-thumb are in `guidelines/design-principles.md`. Conditional formatting is a big enough topic to
+thumb are in `references/design-principles.md`. Conditional formatting is a big enough topic to
 live on its own in `references/conditional-formatting.md`, and it is opt-in, not automatic.
 
 ## Table or matrix: pick by the shape of the data
@@ -115,4 +115,4 @@ Pro. Nothing here needs Fabric or Premium.
 
 Microsoft Learn on the matrix visual, table and matrix conditional formatting, sparklines, and
 sort by column, plus the Tabular Editor blog table design guide and Chris Webb on scrollbar and
-unfiltered spool cost. Full links in `guidelines/sources.md`.
+unfiltered spool cost. Full links in the curated source list in the PowerBI.Skills repo.

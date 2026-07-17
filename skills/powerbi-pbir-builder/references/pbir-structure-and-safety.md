@@ -69,7 +69,7 @@ then the theme's per visual type rules, then whatever is written directly in tha
 `visual.json`. The last one wins.
 
 Prefer putting color and font choices in the report's theme JSON, see
-`guidelines/house-default-theme.json`, over repeating the same formatting object in many
+`house-default-theme.json` in the `powerbi-report-design` skill, over repeating the same formatting object in many
 `visual.json` files. A theme change updates every visual at once. A bespoke `visual.json`
 override only fixes one visual, and the next visual you add will not inherit it.
 

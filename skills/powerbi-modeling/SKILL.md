@@ -20,7 +20,7 @@ description: >-
 This skill covers the model layer: how tables relate, what shape the model should take, and
 where measures and names live. The target is a star schema that VertiPaq can compress and
 filter fast. It assumes Power BI Pro (no Fabric or Premium). For the hard license facts, read
-`guidelines/pro-vs-premium-facts.md` in this repo.
+`pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## When to use
 
@@ -73,7 +73,7 @@ For the pbip and TMDL files and external tools use `powerbi-project-and-tools`.
 - Never name a table exactly `Measures`. That literal name is reserved and a model with it can
   fail to open. Use `_Measures`. See `references/naming-and-measures.md`.
 - Compute columns upstream in M or at the source when you can. DAX calculated columns compress
-  worse and grow the model. See `guidelines/pro-vs-premium-facts.md`.
+  worse and grow the model. See `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## References in this skill
 
@@ -85,9 +85,7 @@ For the pbip and TMDL files and external tools use `powerbi-project-and-tools`.
 - `references/naming-and-measures.md`: the `_Measures` holder table and the reserved name trap,
   friendly names, hiding keys and foreign keys, one marked Date table, and casing.
 
-## Guidelines in this repo
+## Shared facts
 
-- `guidelines/pro-vs-premium-facts.md`: Pro limits, and the cost of calculated columns and
-  tables.
-- `guidelines/sources.md`: the Microsoft Learn star schema article and the SQLBI star schema
-  pieces are the anchors for this skill.
+- `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill: Pro limits, and the cost
+  of calculated columns and tables.

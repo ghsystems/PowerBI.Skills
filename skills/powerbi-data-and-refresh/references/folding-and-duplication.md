@@ -57,7 +57,7 @@ There is no free shared cache on Pro. The levers are:
    on every refresh and does not fold, so convert only derivative tables, never the source pulls. You
    can convert an existing import table to a calculated table by editing the TMDL, if you delete
    `.pbi\cache.abf` first so Desktop rebuilds fresh from the TMDL. See `powerbi-project-and-tools`
-   and `guidelines/pro-vs-premium-facts.md`.
+   and `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 5. Dataflows would materialize the staging once, but Dataflow Gen1 on Pro is unreliable when
    a refreshing model imports it (no orchestration, no folding). Treat it as a last resort
    and sequence it by hand. The clean version needs Fabric or Premium.

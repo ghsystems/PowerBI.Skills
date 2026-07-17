@@ -1,7 +1,7 @@
 # Slicers and navigation
 
 How to let people filter and move through a report without clutter. The rules of thumb are in
-`guidelines/design-principles.md`.
+`references/design-principles.md`.
 
 ## Slicer types and when to use each
 

@@ -17,7 +17,7 @@ description: >-
 
 This skill covers the data layer: how data gets into the model and why refresh is fast,
 slow, or failing. It assumes Power BI Pro (no Fabric or Premium). For the hard license
-facts, read `guidelines/pro-vs-premium-facts.md` in this repo.
+facts, read `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
 ## When to use
 
@@ -69,7 +69,7 @@ For DAX use `powerbi-dax`. For the pbip and TMDL file format and external tools 
   2 hour wall.
 - Do not push a Dataflow Gen1 into a model that also refreshes on a schedule. On Pro there
   is no orchestration between the two, so the model can read stale or partial data or fail.
-  See `guidelines/pro-vs-premium-facts.md`.
+  See `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 - Referencing another loaded query (`Source = OtherQuery`) re-runs that query in full every
   time. If three loaded tables reference the same expensive staging query, that staging
   query, and its API calls, run three times. See `references/folding-and-duplication.md`.

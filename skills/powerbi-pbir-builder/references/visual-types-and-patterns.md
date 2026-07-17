@@ -264,7 +264,7 @@ What the live confirmation established:
 
 Drive any conditional color on the card from a model measure that returns a hex string built
 from the house theme's semantic colors, for example `IF ( [YoY %] >= 0, "#009E73", "#D55E00" )`
-using the `good` and `bad` values from `guidelines/house-default-theme.json`, rather than a
+using the `good` and `bad` values from `house-default-theme.json` in the `powerbi-report-design` skill, rather than a
 one off color choice.
 
 This `cardVisual` is the new card (general availability November 2025), which replaces the old
