@@ -1,7 +1,7 @@
 # Color and theme
 
 How a Power BI theme JSON is built, how to apply and validate the house theme, and the color
-and font rules. The ready made theme is `guidelines/house-default-theme.json`.
+and font rules. The ready made theme is `references/house-default-theme.json`.
 
 ## How a theme JSON is structured
 
@@ -47,7 +47,7 @@ colors, but you still apply the rule on each visual.
 ## Apply the house theme
 
 In Power BI Desktop, go to View, Themes, Browse for themes, and pick
-`guidelines/house-default-theme.json`. From then on every new visual inherits its colors and
+`references/house-default-theme.json`. From then on every new visual inherits its colors and
 fonts. What the house theme encodes:
 
 - `dataColors` is the Okabe-Ito colorblind safe categorical palette (blue, orange, green,
@@ -90,7 +90,7 @@ A trimmed view of the shape:
   colorblind safe set for sequential or diverging scales.
 - Test a palette before you commit. Paste it into Viz Palette to simulate color vision
   deficiency, or build sequential and diverging ramps in ColorBrewer. Links in
-  `guidelines/sources.md`.
+  the curated source list in the PowerBI.Skills repo.
 - Never use color as the only signal. Back it with a label, an icon, or position. See
   `references/accessibility.md`.
 
@@ -125,6 +125,6 @@ is the fastest way to author `visualStyles` without guessing card and property n
 ## Pro vs Premium
 
 Building, applying, and validating a theme is all Pro. The free theme generators in
-`guidelines/sources.md` are Pro friendly. Applying a theme to a published dataset over XMLA, or
+the curated source list in the PowerBI.Skills repo are Pro friendly. Applying a theme to a published dataset over XMLA, or
 extracting a theme programmatically through Semantic Link Labs in a Fabric notebook, needs
 Fabric or Premium. Any Copilot assisted color or narrative feature needs a Fabric capacity too.

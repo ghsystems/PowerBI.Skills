@@ -1,16 +1,20 @@
 # PowerBI.Skills
 
-A Claude Code plugin: seven skills plus research backed guidelines for building Power BI models
+Seven task specific agent skills plus research backed guidelines for building Power BI models
 and reports. Power BI Pro only, no Fabric, no Premium. The single source of truth for how we
 build Power BI.
 
+The skills follow the Agent Skills standard (a `SKILL.md` with `name` and `description`
+frontmatter plus a `references/` folder), so the same skill folders work in Claude Code, Codex,
+and Cursor. Each skill folder is self contained: copy it alone and nothing breaks.
+
 ## Install
 
-This is a Claude Code plugin. It works anywhere you run Claude Code: the CLI, the VS Code or
-JetBrains extension, and the desktop app. It is not part of Cursor's own AI, but the terminal
-commands below run in any terminal, including the one inside Cursor or VS Code.
+### Claude Code
 
-The repo is public, so anyone can install it on any Claude plan, no enterprise needed.
+This repo is a Claude Code plugin. It works anywhere you run Claude Code: the CLI, the VS Code
+or JetBrains extension, and the desktop app. The repo is public, so anyone can install it on
+any Claude plan.
 
 Terminal, the reliable way that works in every setup:
 
@@ -30,19 +34,50 @@ Inside a Claude Code chat session, the interactive form also works:
 /plugin install powerbi-skills@powerbi-skills
 ```
 
-Enter one value per prompt in the dialog. The `/plugin` command is not available in every
-surface (the desktop app hides it), so use the terminal commands above if you do not see it.
+The `/plugin` command is not available in every surface (the desktop app hides it), so use the
+terminal commands above if you do not see it. Update later with
+`claude plugin update powerbi-skills` (or `/plugin update` in chat).
 
-Once installed, all seven skills auto trigger on their matching Power BI work. Update later
-with `claude plugin update powerbi-skills` (or `/plugin update` in chat).
+### Codex and Cursor (one shared step)
+
+Both Codex and Cursor read skills from `~/.agents/skills/`. Clone the repo and copy the skill
+folders there once, and both tools pick them up.
+
+PowerShell (Windows):
+
+```
+git clone https://github.com/MrezaGHS/PowerBI.Skills
+Copy-Item -Recurse -Force PowerBI.Skills/skills/* ~/.agents/skills/
+```
+
+macOS or Linux:
+
+```
+git clone https://github.com/MrezaGHS/PowerBI.Skills
+mkdir -p ~/.agents/skills && cp -R PowerBI.Skills/skills/* ~/.agents/skills/
+```
+
+To update: `git pull` in the clone, then run the copy again. Every skill folder is self
+contained, so copying only the skills you want also works.
+
+For project scoped use instead of user wide, copy the skill folders into the project's
+`.agents/skills/` folder. Both tools discover that too.
+
+### Native alternatives
+
+- Codex: the `$skill-installer` skill can be prompted with this repo's URL to fetch skills.
+- Cursor: Customize, Rules, Add Rule, Remote Rule (GitHub) accepts this repo's URL, and Cursor
+  also discovers `.cursor/skills/`.
+
+The clone and copy method above is the supported team path. Use these only if you prefer them.
 
 ## Why this exists
 
 Building a Power BI model well takes a lot of scattered knowledge: how to pull data without a
 slow refresh, how to model a star schema, how to write DAX that is correct and fast, how to
 design a report that is readable and accessible, and which limits are Pro versus Premium. This
-repo captures that once, as skills Claude loads on demand, so it does not have to be re-learned
-per project.
+repo captures that once, as skills the agent loads on demand, so it does not have to be
+re-learned per project.
 
 ## The skills
 
@@ -56,21 +91,25 @@ per project.
 | `powerbi-project-and-tools` | The pbip and TMDL project format, safe hand editing, free external tools, and the Pro vs Premium boundary. | "edit the TMDL", "what needs Premium", "Tabular Editor" |
 | `powerbi-doc-repo` | Document a finished model into a redacted, shareable git repo. | "document this pbi", "I have another PBI I want to do the same with" |
 
-## Shared guidelines
+## Shared reference material
 
-The `guidelines/` folder holds reference material the skills lean on:
+Shared facts live inside the skill that owns them, so every skill folder stays portable:
 
-- `pro-vs-premium-facts.md`, the verified license limits and what is Premium or Fabric only.
-- `design-principles.md`, the situational report design rules of thumb.
-- `house-default-theme.json`, an accessible Power BI theme (Okabe-Ito colorblind safe palette,
-  Segoe UI, a blue to orange diverging scale) to start every report from.
-- `sources.md`, the curated Pro safe source list per topic.
+- `skills/powerbi-project-and-tools/references/pro-vs-premium-facts.md`, the verified license
+  limits and what is Premium or Fabric only. Other skills point at it by skill name.
+- `skills/powerbi-report-design/references/design-principles.md`, the situational report design
+  rules of thumb.
+- `skills/powerbi-report-design/references/house-default-theme.json`, an accessible Power BI
+  theme (Okabe-Ito colorblind safe palette, Segoe UI, a blue to orange diverging scale) to
+  start every report from.
+- `guidelines/sources.md`, the curated Pro safe source list per topic. Authoring material for
+  maintaining this repo, not loaded by the skills.
 
 ## Authoring changes
 
 To add or change a skill, edit under `skills/` on a branch and open a pull request. Bump the
 `version` in `.claude-plugin/plugin.json` so installed copies pick it up on the next
-`/plugin update`. See CLAUDE.md for the writing rules and the Pro only lens.
+`/plugin update`. See AGENTS.md for the writing rules and the Pro only lens.
 
 ## Keep it local
 

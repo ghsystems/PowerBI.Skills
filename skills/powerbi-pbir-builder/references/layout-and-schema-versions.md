@@ -1,7 +1,7 @@
 # Layout and schema versions
 
 Canvas sizes, a starting layout on the same 8 pixel grid used in
-`guidelines/design-principles.md`, a z order convention, and how to avoid hardcoding a schema
+`design-principles.md` in the `powerbi-report-design` skill, a z order convention, and how to avoid hardcoding a schema
 version.
 
 ## Canvas size

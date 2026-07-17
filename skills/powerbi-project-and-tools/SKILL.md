@@ -18,7 +18,7 @@ description: >-
 This skill covers the Power BI project files (pbip and TMDL) and the free external tools you
 use around a model on Pro. It also draws the license line: what runs on Pro versus what needs
 Premium or Fabric. This is the skill where the license boundary matters most. For the hard
-facts, read `guidelines/pro-vs-premium-facts.md` in this repo.
+facts, read `references/pro-vs-premium-facts.md` in this skill.
 
 ## When to use
 
@@ -81,7 +81,7 @@ republish from Power BI Desktop. See `references/licensing-cheatsheet.md`.
 
 ## Related
 
-- `guidelines/pro-vs-premium-facts.md`: the full, verified license facts with Microsoft sources.
+- `references/pro-vs-premium-facts.md`: the full, verified license facts with Microsoft sources.
 - `powerbi-data-and-refresh`: the refresh troubleshooting playbook once VertiPaq Analyzer or the
   per table timer shows you the culprit.
 - `powerbi-doc-repo`: documenting a model end to end in a redacted, shareable repo.

@@ -2,7 +2,7 @@
 
 A compact quick reference for what runs on Pro versus what needs Premium, Premium Per User (PPU),
 or Fabric. This is a summary. For the full detail and the Microsoft Learn sources, read
-`guidelines/pro-vs-premium-facts.md` in this repo. Re-verify yearly, because these limits move.
+`references/pro-vs-premium-facts.md` in this skill. Re-verify yearly, because these limits move.
 
 | Capability | Pro | Premium, PPU, or Fabric |
 | --- | --- | --- |
@@ -35,5 +35,5 @@ or Fabric. This is a summary. For the full detail and the Microsoft Learn source
 
 ## Full detail
 
-`guidelines/pro-vs-premium-facts.md` has the verified facts and the Microsoft Learn links behind
+`references/pro-vs-premium-facts.md` has the verified facts and the Microsoft Learn links behind
 every row above.

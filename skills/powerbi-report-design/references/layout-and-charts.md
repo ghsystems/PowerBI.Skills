@@ -1,7 +1,7 @@
 # Layout and charts
 
 How to lay out a page and pick the right chart. The situational rules are in
-`guidelines/design-principles.md`. This file is the how-to.
+`references/design-principles.md`. This file is the how-to.
 
 ## Canvas and grid
 
@@ -92,4 +92,4 @@ part to whole, distribution).
   alert state is the whole point.
 - A single number scorecard can be one big card. Not every page needs three tiers.
 
-See `guidelines/design-principles.md` for the full list and the sources behind it.
+See `references/design-principles.md` for the full list and the sources behind it.

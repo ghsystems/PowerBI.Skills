@@ -48,7 +48,7 @@ not guess. Find the culprit, then fix that.
 - 8 scheduled refreshes per day, at least 30 minutes apart. API triggered refreshes count.
 - 1 GB model size. A model near the cap is slow to refresh and may fail.
 
-See `guidelines/pro-vs-premium-facts.md` for the full list.
+See `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill for the full list.
 
 ## Incremental refresh on Pro
 

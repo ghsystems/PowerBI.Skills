@@ -52,7 +52,7 @@ on its own. A star schema plays to that:
   queries are faster and results are easier to reason about.
 
 Microsoft guidance is explicit: model as a star schema for performance and usability. See
-`guidelines/sources.md` for the Microsoft Learn and SQLBI links.
+the curated source list in the PowerBI.Skills repo for the Microsoft Learn and SQLBI links.
 
 ## Star vs snowflake
 
@@ -85,7 +85,7 @@ usually worse than a star:
 - Any change to a dimension attribute has to be rewritten across every row.
 
 A star is a little more work up front and pays off in size, speed, and clarity. See the SQLBI
-"star schema or single table" article in `guidelines/sources.md`.
+"star schema or single table" article in the curated source list in the PowerBI.Skills repo.
 
 ## The three fact types
 

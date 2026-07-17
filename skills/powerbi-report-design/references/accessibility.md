@@ -1,7 +1,7 @@
 # Accessibility
 
 WCAG is not optional. A report that fails contrast or has no tab order excludes real users and
-often fails a client review. The rules of thumb are in `guidelines/design-principles.md`, items
+often fails a client review. The rules of thumb are in `references/design-principles.md`, items
 21 to 23. This file is the checklist and the tools.
 
 ## Contrast (WCAG)
@@ -52,7 +52,7 @@ often fails a client review. The rules of thumb are in `guidelines/design-princi
   to test real rendered colors, including text sitting on a chart.
 - WebAIM contrast checker. A web tool for checking two hex codes. Use it while picking theme
   colors, before they are ever on the canvas.
-- Links for both are in `guidelines/sources.md`.
+- Links for both are in the curated source list in the PowerBI.Skills repo.
 
 ## Built in support to lean on
 
@@ -65,7 +65,7 @@ often fails a client review. The rules of thumb are in `guidelines/design-princi
 
 Microsoft publishes a report accessibility checklist and an accessibility overview. Run the
 checklist before you ship a report to anyone outside your team. Both are linked from the design
-and accessibility anchors in `guidelines/sources.md`.
+and accessibility anchors in the curated source list in the PowerBI.Skills repo.
 
 ## Pro vs Premium
 

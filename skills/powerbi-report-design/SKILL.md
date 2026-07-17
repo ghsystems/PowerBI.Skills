@@ -6,22 +6,21 @@ description: >-
   conditional formatting, tooltips, native analytical visuals, color and theme JSON, fonts,
   slicers, bookmarks and navigation, the filter pane, and an accessibility pass. Use whenever
   the user is laying out a report or dashboard, asking which chart to use, picking colors or a
-  color palette, writing or fixing a theme JSON, dealing with bad fonts, adding slicers or
-  buttons or bookmarks, setting up drill through or the filter pane, or wants to make a report
-  look professional or clean up a busy page. Trigger on phrases like "design a report",
-  "dashboard layout", "pick a chart", "choose colors", "theme JSON", "which font", "bad fonts",
-  "color palette", "slicers", "bookmarks", "navigation", "filter pane", "accessibility",
-  "table design", "matrix", "conditional formatting", "heatmap", "data bars", "tooltip",
-  "decomposition tree", "key influencers", "small multiples", "make this look professional".
-  Assumes Power BI Pro only, no Fabric or Premium.
+  color palette, writing or fixing a theme JSON, fixing bad fonts, adding slicers,
+  bookmarks, drill through, or the filter pane, or wants to make a report
+  look professional or clean up a busy page. Trigger on "design a report", "dashboard layout",
+  "pick a chart", "choose colors", "theme JSON", "color palette", "slicers", "bookmarks",
+  "filter pane", "accessibility", "matrix", "conditional formatting", "heatmap", "data bars",
+  "tooltip", "decomposition tree", "key influencers", "small multiples". Assumes Power BI
+  Pro only, no Fabric or Premium.
 ---
 
 # Power BI report design
 
 This skill covers the report layer: page layout, chart choice, color and theme, slicers and
 navigation, and accessibility. The situational rules of thumb live in
-`guidelines/design-principles.md` and the ready made theme in
-`guidelines/house-default-theme.json`. This skill leans on both and adds the how-to. It
+`references/design-principles.md` and the ready made theme in
+`references/house-default-theme.json`. This skill leans on both and adds the how-to. It
 assumes Power BI Pro (no Fabric or Premium).
 
 ## When to use
@@ -44,7 +43,7 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
 
 ## Workflow
 
-1. Start from the house theme. Apply `guidelines/house-default-theme.json` in View, Themes,
+1. Start from the house theme. Apply `references/house-default-theme.json` in View, Themes,
    Browse for themes. It sets the Okabe-Ito colorblind safe palette, Segoe UI, and a blue to
    orange diverging scale that avoids red and green. Every visual then inherits safe defaults.
    See `references/color-and-theme.md`.
@@ -95,7 +94,7 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
 - Three to five colors with fixed meaning. Gray for context, one accent for the thing in focus,
   and reserve red and green for negative and positive.
 - Name every object. In the Selection and Bookmarks panes, so future you can maintain it.
-- The full 23 rules and when to bend them are in `guidelines/design-principles.md`. A dense
+- The full 23 rules and when to bend them are in `references/design-principles.md`. A dense
   export page for one analyst is allowed to break the five second rule.
 
 ## Pro vs Premium
@@ -108,7 +107,7 @@ See `references/analytical-visuals.md`. Flag these as needing Fabric or Premium,
 and any Copilot authored narrative, applying a theme to a published dataset over the XMLA
 endpoint, and programmatic theme extraction through Semantic Link Labs (it runs in a Fabric
 notebook). Smart narrative in Custom mode and every free theme generator listed in
-`guidelines/sources.md` are Pro safe. The Q&A visual is Pro safe but is on a retirement path
+the curated source list in the PowerBI.Skills repo are Pro safe. The Q&A visual is Pro safe but is on a retirement path
 (around December 2026), so do not build new reports around it.
 
 ## References in this skill

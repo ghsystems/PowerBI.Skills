@@ -65,7 +65,7 @@ So on Pro the loop is:
 3. Republish from Power BI Desktop.
 
 Do not expect to connect Tabular Editor to the Service and save changes to a Pro dataset. That
-save will fail. See `references/licensing-cheatsheet.md` and `guidelines/pro-vs-premium-facts.md`.
+save will fail. See `references/licensing-cheatsheet.md` and `references/pro-vs-premium-facts.md`.
 
 ## Which tool for which job
 
