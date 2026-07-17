@@ -3,8 +3,8 @@
   "name": "powerbi-skills",
   "description": "Power BI Pro build skills as code. Modeling, DAX, data and refresh, report design, PBIR authoring, project and tools, and doc repos. No Fabric, no Premium.",
   "owner": {
-    "name": "MrezaGHS",
-    "url": "https://github.com/MrezaGHS"
+    "name": "ghsystems",
+    "url": "https://github.com/ghsystems"
   },
   "plugins": [
     {

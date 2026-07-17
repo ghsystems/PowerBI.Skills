@@ -19,7 +19,7 @@ any Claude plan.
 Terminal, the reliable way that works in every setup:
 
 ```
-claude plugin marketplace add MrezaGHS/PowerBI.Skills
+claude plugin marketplace add ghsystems/PowerBI.Skills
 claude plugin install powerbi-skills@powerbi-skills
 ```
 
@@ -30,7 +30,7 @@ your Claude Code session so the skills load.
 Inside a Claude Code chat session, the interactive form also works:
 
 ```
-/plugin marketplace add MrezaGHS/PowerBI.Skills
+/plugin marketplace add ghsystems/PowerBI.Skills
 /plugin install powerbi-skills@powerbi-skills
 ```
 
@@ -46,14 +46,14 @@ folders there once, and both tools pick them up.
 PowerShell (Windows):
 
 ```
-git clone https://github.com/MrezaGHS/PowerBI.Skills
+git clone https://github.com/ghsystems/PowerBI.Skills
 Copy-Item -Recurse -Force PowerBI.Skills/skills/* ~/.agents/skills/
 ```
 
 macOS or Linux:
 
 ```
-git clone https://github.com/MrezaGHS/PowerBI.Skills
+git clone https://github.com/ghsystems/PowerBI.Skills
 mkdir -p ~/.agents/skills && cp -R PowerBI.Skills/skills/* ~/.agents/skills/
 ```
 
