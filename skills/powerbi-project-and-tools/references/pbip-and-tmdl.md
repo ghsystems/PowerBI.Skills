@@ -139,6 +139,43 @@ column that matches your `sourceColumn` declaration, and relationships bind. Do 
 the result in an outer SELECTCOLUMNS that re-emits each column with the `IF ( TRUE (), ... )` trick.
 That keeps the aggregation correct and leaves every output column lineage free.
 
+## Every lineageTag must be unique across the model
+
+Every table, column, measure, and hierarchy carries a `lineageTag`, the GUID that binds it to the
+report visuals and to relationships. That tag has to be unique across the whole model, not just
+within its own table file.
+
+This bites when you hand author a new table by copying an existing table file as a starting
+point, because it is easy to rename everything and leave the tag block untouched. Desktop then
+refuses to open the project at all:
+
+```text
+Failed to add a deserialized Table object into the model - name: 'Dim_Date', detailed error:
+An object with lineage-tag '...' already exists in the collection.
+```
+
+The trap is the table name in that message. It is the table that deserialized FIRST with the
+duplicated tag, not the new one you just added. So the error points at a file you never touched
+and sends you debugging an innocent table. Go by the tag in the message, not the name, and find
+both files that carry it.
+
+Readable fake GUIDs are fine here, and they review better than real ones, for example
+`7d000001-0000-4000-8000-000000000001`. Just give each table its own prefix, `7b...` for one
+table and `7c...` for the next, so two hand authored tables can never collide.
+
+Check before you open Desktop. Anything this returns is a duplicate, empty output is clean:
+
+```powershell
+Get-ChildItem .\ABCSales.SemanticModel\definition -Recurse -Filter *.tmdl |
+  Select-String -Pattern "lineageTag:\s*(\S+)" |
+  ForEach-Object { $_.Matches[0].Groups[1].Value } |
+  Group-Object | Where-Object Count -gt 1
+```
+
+Report side ids follow a different rule, so do not go fixing those to match. The `name` on a
+filter in a `visual.json` only has to be unique inside that one visual's `filterConfig`. Desktop
+reuses the same id across visuals when you duplicate a visual, so duplicates there are normal.
+
 ## Other traps
 
 - OneDrive. Keep the pbip repo out of a OneDrive or SharePoint synced folder. A git repo inside a
