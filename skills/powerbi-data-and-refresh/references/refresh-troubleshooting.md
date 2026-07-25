@@ -5,6 +5,10 @@ not guess. Find the culprit, then fix that.
 
 ## Diagnose
 
+0. Work out which phase is slow before you change anything. Long per table timers while tables
+   load is the data phase (source, network, duplication). A long pause at the end, after every
+   table already shows a row count, is the recalc phase (calculated tables and columns, auto
+   date/time). The two have opposite fixes. See `refresh-cost-model.md`.
 1. Reproduce in Desktop. Home, then Refresh. A dialog lists every table with its own timer.
    Watch it. Healthy tables finish in seconds. The one still spinning after two or three
    minutes while the rest are done is the culprit. Cancel once you can see which one it is,
@@ -39,8 +43,12 @@ not guess. Find the culprit, then fix that.
    `folding-and-duplication.md`. Reduce fan out or make the pull cheap.
 4. A genuinely large table with no source side filter. Filter at the source, or use
    incremental refresh (below).
-5. Auto date time hierarchies adding hidden work. Consider turning off the global "Auto
-   date/time" option and using one proper Date table instead.
+5. Auto date/time. On by default, and it builds a hidden calculated date table for EVERY date
+   column in every Import table that is not on the many side of a relationship, each with six
+   calculated columns, all rebuilt on every refresh. Ten date columns is ten hidden tables and
+   sixty hidden calculated columns. One bad date value (a 1900 sentinel, or a blank feeding a
+   DAX date expression, which resolves to 1899) makes a single one of those tables span
+   centuries. Turn it off and use one date table you own. Detail in `refresh-cost-model.md`.
 
 ## The Pro limits that bite
 

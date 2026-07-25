@@ -34,6 +34,26 @@ For DAX use `powerbi-dax`. For the pbip and TMDL file format and external tools 
    not reuse its result, it re-runs the whole pipeline.
 3. A Pro refresh has a hard 2 hour cap. If a single query runs past it, the refresh is
    cancelled and fails. Most "will not refresh" cases are a timeout, not a credential issue.
+4. Refresh has two phases and they need opposite fixes. The data phase pulls and compresses,
+   the recalc phase rebuilds calculated tables, calculated columns, relationships, and
+   hierarchies. Know which one is slow before changing anything. See
+   `references/refresh-cost-model.md`.
+
+## On a brand new model, do this first
+
+Set the defaults while the file is still empty, because they are free now and expensive later.
+
+- Turn OFF auto date/time globally (File, Options and settings, Options, Time intelligence,
+  the Global page option labelled "Auto date/time for new files"). Left on, Power BI builds a
+  hidden calculated date table for EVERY date column in every Import table, each with six
+  calculated columns, and rebuilds all of them on every refresh. Build one date table instead
+  and mark it as a date table.
+- Disable load on staging queries, and keep the number of loaded tables referencing the same
+  expensive staging query low.
+- Keep the first argument of `Web.Contents` a literal string, with everything variable in
+  `RelativePath` and `Query`, or the Service will refuse to refresh a dynamic data source.
+
+Full reasoning and the rest of the list in `references/refresh-cost-model.md`.
 
 ## Workflow
 
@@ -82,3 +102,6 @@ For DAX use `powerbi-dax`. For the pbip and TMDL file format and external tools 
   re-runs it" duplication trap, with how to reduce it on Pro.
 - `references/refresh-troubleshooting.md`: a step by step for a slow or failing refresh, the
   Pro limits, and what each error message means.
+- `references/refresh-cost-model.md`: the design time view. The two refresh phases and how to
+  tell which one is slow, what loads each, auto date/time in depth, and the defaults to set on
+  a new model before any real work.

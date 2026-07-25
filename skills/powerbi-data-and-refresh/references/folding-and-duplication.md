@@ -29,6 +29,12 @@ another by name, for example `Source = stg_incident`, Power Query does not reuse
 query's result. It re-executes that query's full M, including its API calls. There is no
 shared cache between tables during refresh.
 
+This is worse in the Service than on your machine, which is why a model can refresh fine in
+Desktop and fail on a schedule. Desktop refreshes all tables against a single shared cache. The
+Service gives every query its own cache, so nothing is reused across tables. Microsoft: "In a
+cloud environment, each query is refreshed using its own separate cache. So a query can't
+benefit from the same request having already been cached for a different query."
+
 Consequences:
 - If three loaded tables each reference the same expensive staging query, that staging
   query, and its network calls, run three times.
@@ -58,6 +64,14 @@ There is no free shared cache on Pro. The levers are:
    can convert an existing import table to a calculated table by editing the TMDL, if you delete
    `.pbi\cache.abf` first so Desktop rebuilds fresh from the TMDL. See `powerbi-project-and-tools`
    and `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
+
+   Know what this trade actually is. It moves cost out of the data phase and into the recalc
+   phase, where the table is rebuilt in full on every refresh. It wins when the source pull
+   dominates, which is the usual shape of a multi hour Pro refresh, and it is not free. Microsoft
+   does not recommend it, their documented fix for fan out is a dataflow, which on Pro means
+   Dataflow Gen1 with the problems listed in point 5. The Best Practice Analyzer also flags heavy
+   use of calculated tables as technical debt. So after converting, go and clean up the recalc
+   phase you just loaded, starting with auto date/time. See `refresh-cost-model.md`.
 5. Dataflows would materialize the staging once, but Dataflow Gen1 on Pro is unreliable when
    a refreshing model imports it (no orchestration, no folding). Treat it as a last resort
    and sequence it by hand. The clean version needs Fabric or Premium.
