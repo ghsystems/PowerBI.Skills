@@ -111,8 +111,8 @@ clone.
 Why bother. This is the light way to kill refresh fan out. A derivative table (one that only reshapes
 or rolls up tables already in the model) as an M partition re-runs its whole upstream pull chain on
 every refresh, which is a common cause of a slow or failing Pro refresh. As a calculated table it
-computes in memory from data already loaded, with no extra source calls. See
-`powerbi-data-and-refresh/references/folding-and-duplication.md`.
+computes in memory from data already loaded, with no extra source calls. See the
+`powerbi-data-and-refresh` skill for the fan out detail.
 
 Cautions. A calculated table still recomputes on every refresh and does not fold, so only convert
 derivative tables, never the source pulls themselves. If you would rather not touch TMDL, the GUI

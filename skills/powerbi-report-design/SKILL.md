@@ -106,8 +106,8 @@ Low value AI), key influencers, native small multiples, the new card visual, and
 See `references/analytical-visuals.md`. Flag these as needing Fabric or Premium, not Pro: Copilot
 and any Copilot authored narrative, applying a theme to a published dataset over the XMLA
 endpoint, and programmatic theme extraction through Semantic Link Labs (it runs in a Fabric
-notebook). Smart narrative in Custom mode and every free theme generator listed in
-the curated source list in the PowerBI.Skills repo are Pro safe. The Q&A visual is Pro safe but is on a retirement path
+notebook). Smart narrative in Custom mode and the free theme generators (themes.powerbi.tips,
+bibb.pro) are Pro safe. The Q&A visual is Pro safe but is on a retirement path
 (around December 2026), so do not build new reports around it.
 
 ## References in this skill

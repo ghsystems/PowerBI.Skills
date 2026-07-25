@@ -94,4 +94,5 @@ Generates a text summary of a visual or a page.
 ## Sources
 
 Microsoft Learn on the decomposition tree, key influencers, small multiples, the card visual, the
-KPI visual, the Q&A visual, and smart narrative. Full links in the curated source list in the PowerBI.Skills repo.
+KPI visual, the Q&A visual, and smart narrative, all under
+https://learn.microsoft.com/en-us/power-bi/visuals/

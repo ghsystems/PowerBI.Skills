@@ -52,7 +52,7 @@ often fails a client review. The rules of thumb are in `references/design-princi
   to test real rendered colors, including text sitting on a chart.
 - WebAIM contrast checker. A web tool for checking two hex codes. Use it while picking theme
   colors, before they are ever on the canvas.
-- Links for both are in the curated source list in the PowerBI.Skills repo.
+- https://www.tpgi.com/color-contrast-checker/ and https://webaim.org/resources/contrastchecker/
 
 ## Built in support to lean on
 
@@ -64,8 +64,8 @@ often fails a client review. The rules of thumb are in `references/design-princi
 ## The Microsoft checklist
 
 Microsoft publishes a report accessibility checklist and an accessibility overview. Run the
-checklist before you ship a report to anyone outside your team. Both are linked from the design
-and accessibility anchors in the curated source list in the PowerBI.Skills repo.
+checklist before you ship a report to anyone outside your team.
+https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-accessibility-overview
 
 ## Pro vs Premium
 

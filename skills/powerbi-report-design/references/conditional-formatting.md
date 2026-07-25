@@ -130,6 +130,8 @@ Nothing here needs Fabric or Premium.
 
 ## Sources
 
-Microsoft Learn on conditional table formatting, conditional formatting in visuals, and the tips
-for color formatting, plus Havens Consulting on report design and Excelerator BI on icons. Full
-links in the curated source list in the PowerBI.Skills repo.
+Microsoft Learn on conditional table formatting
+(https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-conditional-table-formatting)
+and the tips for color formatting
+(https://learn.microsoft.com/en-us/power-bi/visuals/service-tips-and-tricks-for-color-formatting),
+plus Havens Consulting on report design and Excelerator BI on icons.

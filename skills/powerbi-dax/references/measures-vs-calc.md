@@ -89,7 +89,7 @@ PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC
 The trigger is the diff against `.pbi\cache.abf`, not the TMDL. Close Desktop, edit the partition to
 `= calculated` with a `source =` DAX expression, delete `.pbi\cache.abf`, reopen, then Refresh to
 rebuild. The GUI path (New table, move relationships, delete the old one) also works. The full method
-and the column lineage gotcha are in `powerbi-project-and-tools/references/pbip-and-tmdl.md`.
+and the column lineage gotcha are in the `powerbi-project-and-tools` skill.
 
 Do this only for derivative tables that roll up or reshape data already in the model. A calculated
 table recomputes every refresh and does not fold, so it is the right tool to stop a derivative table

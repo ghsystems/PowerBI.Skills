@@ -30,7 +30,7 @@ real trap, not a style nit.
 
 Use `_Measures`. The leading underscore both avoids the reserved name and sorts the table to the
 top. Avoid the old trick of a leading space (`" Measures"`) as well, since recent Desktop
-validation rejects that too. See the curated source list in the PowerBI.Skills repo for the write ups.
+validation rejects that too.
 
 ## Never attach measures to data tables
 

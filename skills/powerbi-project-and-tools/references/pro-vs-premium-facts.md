@@ -61,11 +61,12 @@ or Premium, which we do not have.
   and refresh time. Use them only when the logic truly needs the model context.
 - Calculated tables (a Date table, a bridge table) are fine and common, but they recompute
   on every refresh and do not fold. Keep them small.
-- You cannot flip an existing table between an import (M) partition and a calculated
-  partition by editing the pbip or TMDL files. Power BI Desktop rejects the project on open
-  with error PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC. To make a calculated table, create
-  it fresh in Desktop, then move relationships, measures, and visuals over and delete the old
-  table. See the project-and-tools skill.
+- You CAN flip an existing table between an import (M) partition and a calculated partition by
+  editing the TMDL, but only if you delete `.pbi\cache.abf` first so Desktop builds the model
+  fresh instead of morphing the cached one. Skip that step and it rejects the project on open
+  with error PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC. The GUI path (create the table fresh
+  in Desktop, move relationships, measures, and visuals over, delete the old table) also works.
+  Full method and the column lineage gotcha are in `references/pbip-and-tmdl.md` in this skill.
 
 ## Analytical and AI visuals: what is Pro safe
 

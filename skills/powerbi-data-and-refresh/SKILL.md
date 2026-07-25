@@ -72,8 +72,8 @@ Full reasoning and the rest of the list in `references/refresh-cost-model.md`.
 
 ## Rules of thumb
 
-- SharePoint file: use `Web.Contents("https://tenant.sharepoint.com/sites/Site/.../File.xlsx")`
-  wrapped in `Excel.Workbook`. Do NOT use `SharePoint.Files("https://tenant.sharepoint.com/sites/Site")`
+- SharePoint file: use `Web.Contents("https://yourtenant.sharepoint.com/sites/Site/.../File.xlsx")`
+  wrapped in `Excel.Workbook`. Do NOT use `SharePoint.Files("https://yourtenant.sharepoint.com/sites/Site")`
   for one file, because it enumerates every file in the whole site first and can run for
   many minutes. This alone can cause a multi hour refresh. Only reach for the site crawl when
   the file will move or you cannot get a stable path. Do not use the REST `GetFileById` endpoint

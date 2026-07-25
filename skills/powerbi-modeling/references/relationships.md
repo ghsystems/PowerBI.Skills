@@ -86,8 +86,8 @@ factless fact table). It holds one row per valid pair of keys:
 
 The bridge turns one awkward many to many into two clean one to many relationships. To make a
 filter cross the bridge from one dimension to the other you may need bidirectional filtering on
-one leg, or a measure using `CROSSFILTER`. Turn that on deliberately and test the totals. See the
-Microsoft many to many guidance in the curated source list in the PowerBI.Skills repo.
+one leg, or a measure using `CROSSFILTER`. Turn that on deliberately and test the totals. See
+https://learn.microsoft.com/en-us/power-bi/guidance/relationships-many-to-many
 
 Why the bridge beats a direct many to many relationship:
 - You control exactly where filters cross, one leg at a time.
