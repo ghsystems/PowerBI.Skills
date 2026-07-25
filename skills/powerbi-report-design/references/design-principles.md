@@ -64,9 +64,8 @@ and adds the how-to detail.
     not need. Less non data ink means lower cognitive load (Tufte, Knaflic).
 18. Slicers. Keep about five visible. Beyond that, switch to dropdowns. Sync slicers across
     pages where it helps, and always give the user a way to clear all. Match the question to
-    the slicer type (list, dropdown, between for numeric ranges, relative date for dates). For
-    dates the house rule is one Date slicer with a Year, Quarter, Month hierarchy, not separate
-    Year and Month slicers.
+    the slicer type (list, dropdown, between for numeric ranges, relative date for dates). The
+    house rule for date slicers is under house conventions below.
 19. Navigation. Use buttons plus bookmarks for an app like flow, and a back button for drill
     through. Name every object clearly in the Selection and Bookmarks panes so future you can
     maintain it.

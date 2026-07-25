@@ -47,12 +47,10 @@ themselves use `powerbi-dax`. For the pbip and TMDL file format and external the
    Browse for themes. It sets the Okabe-Ito colorblind safe palette, Segoe UI, and a blue to
    orange diverging scale that avoids red and green. Every visual then inherits safe defaults.
    See `references/color-and-theme.md`.
-2. Choose the layout. Canvas 16:9 at 1280x720. Snap to an 8 pixel grid and align everything.
-   Use the three tier layout: KPI cards on top, the "why" charts (trend, breakdown) in the
-   middle, detail tables at the bottom. Keep about six to eight visuals per page. The house
-   preference is page 1 is KPI cards plus one Date slicer only (a single Year, Quarter, Month
-   hierarchy slicer, not separate Year and Month), and page 2 is supporting tables and trend
-   charts. See `references/layout-and-charts.md`.
+2. Choose the layout. Canvas 16:9 at 1280x720, everything on an 8 pixel grid, about six to eight
+   visuals per page. Answer first at the top, the "why" charts below, detail last. See
+   `references/layout-and-charts.md` for the grid numbers and
+   `references/design-principles.md` for the house page conventions.
 3. Pick charts by the question. Bar or column for comparison, line for trend, waterfall for
    variance, scatter for correlation and outliers, small multiples instead of many overlapping
    lines. Avoid pie, donut, and gauge unless it is a small part to whole. Always pair a number

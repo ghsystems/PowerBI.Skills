@@ -37,12 +37,9 @@ Put the single most important visual top left.
 
 ## The house page layout preference
 
-- Page 1 is the summary. KPI cards across the top, plus one Date slicer (a single Year, Quarter,
-  Month hierarchy slicer, not separate Year and Month), and nothing else. No detail tables on
-  page 1. It answers "how are we doing" at a glance.
-- Page 2 is the support. Trend charts and the detail tables that explain the KPIs on page 1.
-- Sync the Date slicer across both pages so the filter context carries over, and keep a Clear all.
-  See `references/slicers-and-navigation.md`.
+Summary page first, supporting detail after, with one Date slicer synced across both. The full
+convention, including when it does not apply, is in `references/design-principles.md` under
+house conventions.
 
 ## Choose the chart by the question
 

@@ -205,19 +205,11 @@ Two things hold either way:
 - Do not let an agent or a reviewer "fix" this by marking the date table. It will not make a
   single measure better and it adds a date hierarchy nobody uses.
 
-## Page layout (house preference)
+## What the report layer needs from the model
 
-Report layout is the report-design skill's job, but the house default that pairs with this model
-is worth stating so the model supports it:
-
-- Page 1 is the summary: KPI cards plus one Date slicer (a Year, Quarter, Month hierarchy, not
-  separate Year and Month slicers), nothing else.
-- Page 2 is the supporting detail: the tables and the trend charts.
-
-For the model, that means clean measures for the KPI cards and a proper marked Date table with a
-Year, Quarter, Month hierarchy so the Date slicer works. For the actual layout, slicer choices,
-and visuals, see
-the `powerbi-report-design` skill and its `design-principles.md` reference.
+The house page layout is owned by the `powerbi-report-design` skill. What it asks of the model
+is small: clean summary measures for any cards, and a date or period dimension carrying the
+hierarchy the page level slicer uses. Build those and the report layer has what it needs.
 
 ## Quick checklist
 
