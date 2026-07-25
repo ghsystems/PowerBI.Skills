@@ -86,7 +86,9 @@ Microsoft: "When Power BI refreshes the model, each auto date/time table is also
 generates a hidden auto date/time table increases the model size and also extends the data
 refresh time." Be honest about the evidence here. The published before and after measurements
 are model size, not refresh duration. Treat "this will cut refresh time by X" as unproven and
-measure your own model.
+measure your own model. The worked case at the end of this file is one measured example, where
+removing 14 of these tables took a Service refresh from over an hour to about 15 minutes, but it
+is a single case with other changes in the same pass.
 
 **The row count trap.** Each table covers whole calendar years from the earliest to the latest
 value in its column, one row per day. Microsoft's own example is 1,461 rows for data spanning
@@ -149,24 +151,39 @@ has moved its bottleneck rather than removed it.
 
 ## A worked case
 
-A small Pro model, about 5 MB compressed, reading a paged REST API and a few workbooks. Its
-scheduled refresh failed repeatedly, each attempt cancelled at exactly two hours, while Desktop
-refreshed fine. That gap between Desktop and the Service is the shared cache difference above.
+A small Pro model, about 5 MB compressed, reading a paged REST API and a few workbooks. Every
+timing below is the Power BI Service, not Desktop.
+
+The starting point: the refresh genuinely needed about three hours of work, so every scheduled
+run was cancelled at the two hour cap and failed. Desktop refreshed fine throughout, which is the
+shared cache difference above rather than a sign the model was healthy. Note both facts. The cap
+explains the failure, the three hours explains why it hit the cap.
 
 Two fixes, in order.
 
 1. Data phase. Derived tables that each re-ran the same staging queries were converted to DAX
    calculated tables, cutting the API chain runs from about 40 to 15 per refresh and the
-   workbook downloads from 16 to 5. Refresh started passing, at roughly an hour.
-2. Recalc phase. Auto date/time was turned off, removing 14 hidden date tables (and therefore
-   84 hidden calculated columns) that sat on top of a model that already had 8 calculated
-   tables of its own. Refresh landed at about 5 minutes in Desktop and 10 in the Service.
+   workbook downloads from 16 to 5. Three hours became one to one and a half, and refreshes
+   started completing.
+2. Recalc phase. Auto date/time was turned off, removing 14 hidden date tables, and with them 84
+   hidden calculated columns, from a model that already carried 8 calculated tables of its own.
+   That hour or more became about 15 minutes.
 
-The honest reading: the first fix moved the work into the recalc phase and the second cleaned
-that phase up. The exact split of the second improvement was not measured, because per table
-refresh timings in the Service need the XMLA endpoint, which is Premium. Other changes in the
-same pass (a narrower date range on the fact) also reduced recalc work. Treat the numbers as one
-case, not a benchmark.
+Read the second step carefully, because it is the reason this file exists. Once the data phase
+was fixed, roughly three quarters of the remaining refresh time turned out to be recalc rather
+than data, and the hidden date tables were the largest single thing in that phase. A model can
+look like it has a source problem when what it really has is a recalc problem.
+
+That size of saving also says something about the hidden tables themselves. Date columns covering
+only two calendar years would generate tables of a few hundred rows each, which could not cost
+that much. Tables large enough to matter mean at least one date column was spanning decades or
+centuries, which is the sentinel date trap above. Worth checking your own date columns for a
+stray 1900, a far future placeholder, or a blank feeding a DAX date expression.
+
+Caveats. The exact split of the second improvement was not measured, because per table refresh
+timings in the Service need the XMLA endpoint, which is Premium. Other changes in the same pass
+(a narrower date range on the fact) also reduced recalc work. Treat the numbers as one case, not
+a benchmark.
 
 ## Measuring on Pro
 
