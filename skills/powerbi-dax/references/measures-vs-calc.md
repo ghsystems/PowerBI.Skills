@@ -41,8 +41,14 @@ A calculated table is a table whose rows come from a DAX expression, evaluated o
 - It is common and fine for a Date table (CALENDAR or CALENDARAUTO plus added columns), a small
   bridge or disconnected table, or a filtered copy for a specific need.
 - It recomputes on every refresh and does not fold to any source. It is pure model compute.
-- Keep it small. A Date table over your real date range is fine. Do not build a giant
-  calculated table when the source could deliver the rows already shaped.
+- Size is not the test. Whether the table re-derives from data already in the model is the
+  test. A derivative table that only reshapes, rolls up, or filters tables that are already
+  loaded is a good calculated table at any size, and in a real production model the largest
+  fact table is calculated on purpose so it stops re-running its source pulls.
+- A table that would otherwise pull from a source is not a calculated table. Shape it in M and
+  let it fold.
+- A dimension built from a fact (DISTINCT over a fact column) is a legitimate and common
+  shape. The values already sit in the model, so nothing is fetched twice.
 - For the Date table specifically, build it once and mark it as a date table. See
   `powerbi-modeling`.
 
@@ -69,6 +75,10 @@ transition. It is the single most important idea in DAX.
 - Every measure reference carries an implicit CALCULATE. So calling a measure from inside SUMX
   already applies context transition on each row. This is why a measure called row by row can
   give a different, usually correct, answer than the same raw expression.
+- A filter argument in CALCULATE REPLACES any existing filter on that column, it does not add
+  to it. Wrap it in KEEPFILTERS to make it intersect with what is already filtered instead.
+  Leaving KEEPFILTERS out inside an iterator gives a wrong number rather than an error. Worked
+  example in `references/virtual-relationships.md`.
 - Practical effect: if a total does not equal the sum of the visible rows, context transition
   (or the lack of it) is usually why. Decide whether you want the measure evaluated per row and
   then combined, or evaluated once over the whole visible set.
@@ -89,7 +99,7 @@ PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC
 The trigger is the diff against `.pbi\cache.abf`, not the TMDL. Close Desktop, edit the partition to
 `= calculated` with a `source =` DAX expression, delete `.pbi\cache.abf`, reopen, then Refresh to
 rebuild. The GUI path (New table, move relationships, delete the old one) also works. The full method
-and the column lineage gotcha are in `powerbi-project-and-tools/references/pbip-and-tmdl.md`.
+and the column lineage gotcha are in the `powerbi-project-and-tools` skill.
 
 Do this only for derivative tables that roll up or reshape data already in the model. A calculated
 table recomputes every refresh and does not fold, so it is the right tool to stop a derivative table

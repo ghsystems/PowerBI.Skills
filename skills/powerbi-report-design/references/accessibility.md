@@ -52,7 +52,35 @@ often fails a client review. The rules of thumb are in `references/design-princi
   to test real rendered colors, including text sitting on a chart.
 - WebAIM contrast checker. A web tool for checking two hex codes. Use it while picking theme
   colors, before they are ever on the canvas.
-- Links for both are in the curated source list in the PowerBI.Skills repo.
+- https://www.tpgi.com/color-contrast-checker/ and https://webaim.org/resources/contrastchecker/
+
+## Verify it, do not assume it
+
+Alt text is the accessibility rule most often stated and least often done. A well built report
+was found with a deliberate, curated tab order on all 148 visuals and not one single piece of alt
+text. The pass was half done, and nobody noticed because nothing checks.
+
+On a PBIP you can check both in seconds. Run these from the project root with Desktop closed.
+
+```powershell
+# how many visuals exist, and how many have alt text
+$v = Get-ChildItem .\*.Report\definition\pages -Recurse -Filter visual.json
+"visuals: $($v.Count)"
+"with alt text: $(($v | Select-String -Pattern '"altText"').Count)"
+```
+
+```powershell
+# any visual left on the default tab order
+Get-ChildItem .\*.Report\definition\pages -Recurse -Filter visual.json |
+  Where-Object { -not (Select-String -Path $_.FullName -Pattern '"tabOrder"' -Quiet) } |
+  Select-Object -ExpandProperty FullName
+```
+
+Run them before you ship, not after a client review. If the alt text count is far below the
+visual count, the report is not accessible whatever the contrast checker says.
+
+Decorative shapes and images legitimately have no alt text, so expect the two numbers to differ
+by the number of logos and backing shapes. A count of zero is never legitimate.
 
 ## Built in support to lean on
 
@@ -64,8 +92,8 @@ often fails a client review. The rules of thumb are in `references/design-princi
 ## The Microsoft checklist
 
 Microsoft publishes a report accessibility checklist and an accessibility overview. Run the
-checklist before you ship a report to anyone outside your team. Both are linked from the design
-and accessibility anchors in the curated source list in the PowerBI.Skills repo.
+checklist before you ship a report to anyone outside your team.
+https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-accessibility-overview
 
 ## Pro vs Premium
 

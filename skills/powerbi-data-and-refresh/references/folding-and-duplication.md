@@ -76,10 +76,47 @@ There is no free shared cache on Pro. The levers are:
    a refreshing model imports it (no orchestration, no folding). Treat it as a last resort
    and sequence it by hand. The clean version needs Fabric or Premium.
 
+## Counting the fan out
+
+The number that decides refresh time is not "is there duplication", it is "how many times does
+each expensive pull actually run". Count it before you change anything, because the answer is
+usually not where people look first.
+
+Method:
+
+1. List every query that touches the network. That is your cost centre list.
+2. For each one, find every query that names it. Grep the M for the query name.
+3. Follow those references transitively. If `staging` is read by `fact`, and `fact` is read by
+   `rollup`, and all three are loaded, then `staging` runs three times, once for itself, once
+   inside `fact`, and once inside `rollup`.
+4. Write the number next to the query. That is how many times its API calls or file downloads
+   happen in one Service refresh.
+
+Count LOADED tables too, not just staging queries. This is the part that surprises people. A
+loaded table is still a query, and referencing it re-runs its whole M exactly like referencing
+a staging query does. In a real Pro model the two worst multipliers were both loaded tables, a
+planning table read by five other queries and a sprint dimension read by four, while the actual
+staging queries sat at one or two each. Anyone counting only staging queries would have missed
+the biggest problem in the model.
+
+A worked shape from that model, after counting:
+
+| Query | Kind | Runs per refresh | Why |
+| --- | --- | --- | --- |
+| `fact_planning` | loaded table, reads a workbook | 5 | itself, plus 4 transform queries each re-derive it |
+| `dim_sprint` | loaded table, reads an API | 4 | itself, plus 3 transform queries need its date ranges |
+| `stg_epic` | staging, reads an API | 3 | two dimensions plus the union query |
+| `stg_task` | staging, reads an API | 2 | a dimension plus the union query |
+
+The fix in both bad cases was the same: the join those four transform queries each re-derived
+belonged downstream in DAX, not repeated in M.
+
 ## Quick checklist
 
 - Are filters at the source, not in M after a full pull.
 - Does the query fold as far as possible (View Native Query).
-- How many loaded tables reference each expensive staging query. Fewer is faster.
+- Count the runs per refresh for every query that touches the network, loaded tables included.
 - Is any single REST page too large to build inside the source's limit.
 - Is a SharePoint single file being read directly, not via a whole site crawl.
+- Is the same workbook opened by several separate queries. One read into one loaded table, then
+  referenced, is usually cheaper than three queries against the same file.

@@ -113,6 +113,7 @@ Pro. Nothing here needs Fabric or Premium.
 
 ## Sources
 
-Microsoft Learn on the matrix visual, table and matrix conditional formatting, sparklines, and
-sort by column, plus the Tabular Editor blog table design guide and Chris Webb on scrollbar and
-unfiltered spool cost. Full links in the curated source list in the PowerBI.Skills repo.
+Microsoft Learn on the matrix visual, sparklines, and sort by column, under
+https://learn.microsoft.com/en-us/power-bi/visuals/. Plus the Tabular Editor blog table design
+guide, and Chris Webb on scrollbar and unfiltered spool cost:
+https://blog.crossjoin.co.uk/2022/11/10/performance-tuning-table-visuals-with-filters-applied-in-power-bi/

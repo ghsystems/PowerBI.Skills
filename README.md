@@ -1,8 +1,11 @@
 # PowerBI.Skills
 
-Seven task specific agent skills plus research backed guidelines for building Power BI models
+Eight task specific agent skills plus research backed guidelines for building Power BI models
 and reports. Power BI Pro only, no Fabric, no Premium. The single source of truth for how we
 build Power BI.
+
+Much of the detail is harvested from real production models rather than from documentation, so
+the patterns here are ones that have survived a Service refresh and a client review.
 
 The skills follow the Agent Skills standard (a `SKILL.md` with `name` and `description`
 frontmatter plus a `references/` folder), so the same skill folders work in Claude Code, Codex,
@@ -83,6 +86,7 @@ re-learned per project.
 
 | Skill | What it does | Example trigger |
 | --- | --- | --- |
+| `powerbi-build-playbook` | The phase order for a whole build, the manual Desktop steps, and which skill owns which question. Start here. | "where do I start", "build a new power bi report", "create a pbip" |
 | `powerbi-data-and-refresh` | The data layer. Power Query M, connecting to REST or ServiceNow or SharePoint, paging, query folding, and fixing slow or failing refreshes. | "my refresh keeps failing", "connect power bi to this api" |
 | `powerbi-modeling` | Star schema, dimensions vs facts, grain, relationships, and naming including the `_Measures` table. | "how should I model this", "star schema" |
 | `powerbi-dax` | Measures vs calculated columns and tables, context, and reusable DAX patterns. | "write a year over year measure", "running total" |
@@ -110,6 +114,13 @@ Shared facts live inside the skill that owns them, so every skill folder stays p
 To add or change a skill, edit under `skills/` on a branch and open a pull request. Bump the
 `version` in `.claude-plugin/plugin.json` so installed copies pick it up on the next
 `/plugin update`. See AGENTS.md for the writing rules and the Pro only lens.
+
+Before committing, run the check script. It enforces the writing rules, the file size caps, the
+self containment rule, and redaction:
+
+```
+pwsh -File tools\check.ps1
+```
 
 ## Keep it local
 

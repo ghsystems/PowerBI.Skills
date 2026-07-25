@@ -80,7 +80,7 @@ Power BI models bury real identifiers in several places. Check all of them.
   `if [Company] = "Real Co"` in M or `IF ( company = "Real Co", ... )` in DAX. Replace with
   an alias like "ABC Company".
 - Hosts and tenant URLs. ServiceNow instance hosts, SharePoint site URLs, and personal
-  OneDrive paths like `https://tenant-my.sharepoint.com/personal/<user>`. Replace with
+  OneDrive paths like `https://yourtenant-my.sharepoint.com/personal/<user>`. Replace with
   placeholder hosts.
 - People. Hardcoded rosters in dimension tables, owners named in M filters like
   `each [Owner] <> "Real Name"`, owners named in DAX like `IF ( owner = "Real Name", ... )`,

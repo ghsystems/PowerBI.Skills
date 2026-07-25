@@ -64,9 +64,8 @@ and adds the how-to detail.
     not need. Less non data ink means lower cognitive load (Tufte, Knaflic).
 18. Slicers. Keep about five visible. Beyond that, switch to dropdowns. Sync slicers across
     pages where it helps, and always give the user a way to clear all. Match the question to
-    the slicer type (list, dropdown, between for numeric ranges, relative date for dates). For
-    dates the house rule is one Date slicer with a Year, Quarter, Month hierarchy, not separate
-    Year and Month slicers.
+    the slicer type (list, dropdown, between for numeric ranges, relative date for dates). The
+    house rule for date slicers is under house conventions below.
 19. Navigation. Use buttons plus bookmarks for an app like flow, and a back button for drill
     through. Name every object clearly in the Selection and Bookmarks panes so future you can
     maintain it.
@@ -97,13 +96,24 @@ the rules above, not against them.
   headers) never uses an en dash or an em dash, use a hyphen, and never uses a semicolon. This is
   the same house writing voice as the rest of this repo, applied to what lands on the canvas. No
   real company name either, use "ABC Company".
-- Plain-English tooltips. Every non-obvious chart or table carries a short tooltip that says, in
-  plain words, what it shows, so a reader gets it immediately and a future maintainer is not left
-  guessing. Short but complete.
-- KPI card style. Compact gray fill (the secondaryBackground slot) with a dark border, a touch
-  smaller than the full slot, and always a comparison versus the prior or latest month with an
-  arrow, a sign, and a semantic color. Color encodes good versus bad, never up versus down. A
-  metric that rose but is bad (open critical vulnerabilities) shows an up arrow in the bad color.
+- Plain-English explanations, in two tiers. Every non-obvious visual carries a one line subtitle
+  saying what it shows, in plain words. Where the arithmetic itself needs explaining, the full
+  rules go behind the information icon in the visual header, and the subtitle ends by pointing at
+  it, for example "Rules under the header help icon". The subtitle stays short because the long
+  version has somewhere to live. See the `powerbi-pbir-builder` skill for both properties.
+- KPI card style, when there is a KPI. Compact gray fill (the secondaryBackground slot) with a
+  dark border, a touch smaller than the full slot, and always a comparison versus the prior or
+  latest month with an arrow, a sign, and a semantic color. Color encodes good versus bad, never
+  up versus down. A metric that rose but is bad (open critical vulnerabilities) shows an up arrow
+  in the bad color.
+- Not every report has a KPI. An operational report where each page answers a different working
+  question does not need a card row, and adding one to satisfy a template produces a number
+  nobody uses. A 22 page operational report built to this house style carries no KPI row at all
+  and is better for it. Add cards when the page has a headline, not by default.
+- The container carries the structure. A banded title, a short subtitle, an 8 pixel border
+  radius, a light shadow, and 2 pixel padding group a visual without drawing a single background
+  shape. That is fewer objects, a cleaner tab order, and one theme edit to restyle. Prefer it
+  over drawn backing panels.
 - Conditional formatting is opt-in. Default is a clean, uncolored table or chart. Ask before
   adding any conditional formatting, heatmap, data bars, or status icons, because it is
   situational and coloring everything wastes attention. When it is added, fit the pattern to the

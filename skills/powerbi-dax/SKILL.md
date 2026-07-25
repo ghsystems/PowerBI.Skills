@@ -52,7 +52,10 @@ DAX Studio, the pbip and TMDL format, and the calculated table limitation use
    blank.
 6. Guard every division with DIVIDE so an empty denominator returns blank, not an error.
 7. If a total looks wrong, check context transition and whether the measure should aggregate
-   over the visible rows. Verify in DAX Studio if needed (see `powerbi-project-and-tools`).
+   over the visible rows. A ratio whose denominator is an AVERAGE, or any ratio that does not
+   sum, is correct per row and meaningless at the total until you fix it. See
+   `references/ratios-and-totals.md`. Verify in DAX Studio if needed (see
+   `powerbi-project-and-tools`).
 
 ## Rules of thumb
 
@@ -78,6 +81,14 @@ DAX Studio, the pbip and TMDL format, and the calculated table limitation use
 - `references/patterns.md`: correct, copy ready DAX for base measures, safe division, percent
   of total, year over year, year to date, running totals, ranking, virtual relationships, and
   VAR, plus a common mistakes list.
+- `references/ratios-and-totals.md`: the measure that is right on a row and wrong on the total,
+  the HASONEVALUE and AVERAGEX fix, releasing specific columns rather than a whole table,
+  collapsing duplicate rows before summing, and a cumulative total over a non date column.
+- `references/virtual-relationships.md`: the five TREATAS forms, joining two facts at different
+  grains, building a composite key in a measure, KEEPFILTERS, and what to do when the source
+  gives you no surrogate key.
+- `references/measure-driven-columns.md`: field parameters and disconnected column header tables,
+  with the TMDL for both, so a visual's columns can come from a calculation.
 
 ## Shared facts
 

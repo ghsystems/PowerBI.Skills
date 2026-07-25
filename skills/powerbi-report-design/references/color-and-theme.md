@@ -60,25 +60,48 @@ fonts. What the house theme encodes:
   without relying on a true red and green.
 - Segoe UI across the text classes, at a tight size scale.
 
-A trimmed view of the shape:
+- A `visualStyles` block that carries the container look: a banded title, a gray subtitle, a
+  divider, an 8 pixel border radius, a drop shadow, and 2 pixel padding, plus an 8, 9, 10, 12
+  type scale on axes, legends, and grids. This is the part that makes a report look finished, and
+  it belongs in the theme rather than on each visual. See the anti-pattern below.
+
+The type scale is 8 for axis labels, legends, slicers, and table text, 9 for subtitles and
+secondary text, 10 for axis titles and data labels, and 12 for visual titles. Sizes above that
+are for a card's headline number only.
+
+## The anti-pattern: a theme that is only decoration
+
+A real report was found with a theme setting exactly three things, a title style, a subtitle
+style, and a border. Every one of those was ALSO written literally into 31 to 50 individual
+`visual.json` files with identical values. Deleting the theme would have changed nothing on the
+canvas.
+
+That is not a theme, it is a copy of a theme. The cost is real: changing the title band color
+means editing 50 files instead of one, which is exactly the outcome rule 23 in
+`references/design-principles.md` exists to prevent.
+
+The test is simple. Pick a value your theme sets, change it, and reopen the report. If nothing
+moves, your visuals are overriding it and you do not have a design system.
+
+So the rule is: put font, size, weight, and color in the theme. Put only the things that differ
+per visual, the title TEXT, the subtitle TEXT, and any measure driven color, in the visual.
+
+## How a visual references a theme color
+
+The mechanism that makes this work, and the one most people never find:
 
 ```json
-{
-  "name": "ABC House Default",
-  "dataColors": ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#56B4E9", "#CC79A7", "#F0E442", "#000000"],
-  "good": "#009E73", "neutral": "#8A8886", "bad": "#D55E00",
-  "minimum": "#0072B2", "center": "#F0F0F0", "maximum": "#D55E00",
-  "background": "#FFFFFF", "secondaryBackground": "#F3F2F1",
-  "foreground": "#252423", "foregroundNeutralSecondary": "#605E5C",
-  "tableAccent": "#0072B2",
-  "textClasses": {
-    "callout": { "fontFace": "Segoe UI Semibold", "fontSize": 28, "color": "#252423" },
-    "title":   { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#252423" },
-    "header":  { "fontFace": "Segoe UI Semibold", "fontSize": 12, "color": "#252423" },
-    "label":   { "fontFace": "Segoe UI",          "fontSize": 10, "color": "#252423" }
-  }
-}
+"fontColor": { "solid": { "color": { "expr": { "ThemeDataColor": { "ColorId": 1, "Percent": 0 } } } } }
 ```
+
+`ColorId` indexes the theme. `0` is `background`, `1` is `foreground`, and `2` through `9` are
+`dataColors[0]` through `dataColors[7]`. `Percent` is a tint when positive and a shade when
+negative, as a fraction, so `0.6` is 60 percent lighter and `-0.25` is 25 percent darker.
+
+A pale banded subtotal row is therefore the bad color at 60 percent lighter, not a hand picked
+pink. Prefer this over a literal hex anywhere the color carries a meaning the theme already
+names. It is the difference between a report that survives a theme swap and one that does not.
+The `powerbi-pbir-builder` skill has the JSON detail.
 
 ## Color rules
 
@@ -89,8 +112,8 @@ A trimmed view of the shape:
 - Default to colorblind safe palettes. Okabe-Ito for categorical series, and a ColorBrewer
   colorblind safe set for sequential or diverging scales.
 - Test a palette before you commit. Paste it into Viz Palette to simulate color vision
-  deficiency, or build sequential and diverging ramps in ColorBrewer. Links in
-  the curated source list in the PowerBI.Skills repo.
+  deficiency (https://projects.susielu.com/viz-palette), or build sequential and diverging ramps
+  in ColorBrewer (https://colorbrewer2.org/).
 - Never use color as the only signal. Back it with a label, an icon, or position. See
   `references/accessibility.md`.
 
@@ -124,7 +147,8 @@ is the fastest way to author `visualStyles` without guessing card and property n
 
 ## Pro vs Premium
 
-Building, applying, and validating a theme is all Pro. The free theme generators in
-the curated source list in the PowerBI.Skills repo are Pro friendly. Applying a theme to a published dataset over XMLA, or
+Building, applying, and validating a theme is all Pro. The free theme generators
+(https://themes.powerbi.tips/, https://bibb.pro/apps/theme-generator/) are Pro friendly.
+Applying a theme to a published dataset over XMLA, or
 extracting a theme programmatically through Semantic Link Labs in a Fabric notebook, needs
 Fabric or Premium. Any Copilot assisted color or narrative feature needs a Fabric capacity too.
