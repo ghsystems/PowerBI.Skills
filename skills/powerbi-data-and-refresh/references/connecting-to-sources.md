@@ -1,71 +1,22 @@
 # Connecting to sources
 
-Patterns for the sources that show up most, with a Pro lens. Hosts and names here are
-placeholders. Replace `yourinstance` and `yourtenant` with the real values in the model,
-and keep real hosts out of any shared or committed file.
+Which connector for which source, and the shape of a clean staging query. Hosts and names here
+are placeholders. Replace `yourinstance` and `yourtenant` with the real values in the model, and
+keep real hosts out of any shared or committed file.
 
-## REST and ServiceNow Table API paging
+For a paged REST API, the loop and its guards live in `references/rest-paging-pattern.md`. For
+the defensive transforms that keep a query alive when a source drifts, see
+`references/m-hardening.md`.
 
-A REST source that returns pages needs a loop. The clean shape is a `FetchPage` function
-plus `List.Generate` that stops as soon as a page comes back short. This example is a
-ServiceNow Table API pull, but the shape fits any offset or cursor paged API.
+## Picking the connector
 
-```m
-let
-  BaseUrl  = "https://yourinstance.service-now.com",
-  RelPath  = "api/now/table/incident",
-  PageSize = 5000,      // keep pages modest so the source can build them inside its limits
-  MaxPages = 40,        // row ceiling = PageSize * MaxPages. Change both together.
-  Fields   = "number,sys_id,priority,opened_at,short_description,assignment_group",
-
-  FullQuery = "sys_created_on>=javascript:gs.dateGenerate('2025-01-01','00:00:00')"
-            & "^ORDERBYsys_id",   // a stable order key makes offset paging deterministic
-
-  FetchPage = (offset as number) as table =>
-    let
-      Raw = Web.Contents(BaseUrl, [
-        RelativePath = RelPath,
-        Timeout      = #duration(0, 0, 10, 0),   // fail a stalled call fast, do not hang
-        Query = [
-          sysparm_display_value          = "true",
-          sysparm_exclude_reference_link = "true",
-          sysparm_fields                 = Fields,
-          sysparm_limit                  = Text.From(PageSize),
-          sysparm_offset                 = Text.From(offset),
-          sysparm_query                  = FullQuery
-        ]
-      ]),
-      Rows = Json.Document(Raw)[result],
-      Tbl  = Table.FromList(Rows, Splitter.SplitByNothing(), {"Record"})
-    in
-      Tbl,
-
-  Pages = List.Generate(
-    () => [Offset = 0, Data = FetchPage(0)],
-    (s) => Table.RowCount(s[Data]) > 0 and s[Offset] < MaxPages * PageSize,
-    (s) => [ Offset = s[Offset] + PageSize,
-             Data   = if Table.RowCount(s[Data]) < PageSize then #table({}, {}) else FetchPage(s[Offset] + PageSize) ],
-    (s) => s[Data]
-  ),
-
-  Combined = Table.Combine(Pages)
-in
-  Combined
-```
-
-Key points:
-- Use a static `BaseUrl` plus `RelativePath` and `Query`. This lets the Service bind
-  credentials to the base URL. Building one long dynamic URL string breaks credential
-  binding and refresh in the Service.
-- Order by a stable key so paging does not skip or repeat rows.
-- Pick a page size the source can assemble inside its own transaction limit. A very large
-  page with expanded display or reference values can be cancelled server side, which reaches
-  Power BI as "the operation was cancelled" and "the exception was raised by the IDbCommand
-  interface". If you see that, lower the page size and keep the ceiling by raising max pages.
-- Add `Timeout` so one stuck request fails in minutes instead of hanging toward the 2 hour
-  refresh cap.
-- ServiceNow with `sysparm_display_value = "true"` resolves each reference field to text.
-  That is convenient but expensive per row. It is often the reason a page is slow.
+| Source | Use | Not |
+| --- | --- | --- |
+| REST or ServiceNow Table API | `Web.Contents` with a literal base URL, `RelativePath`, and `Query`, wrapped in the paging loop | One long concatenated URL string, which breaks credential binding in the Service |
+| One Excel file on SharePoint | `Excel.Workbook(Web.Contents("<direct file url>"), null, true)` | `SharePoint.Files`, which crawls every file in the site first |
+| Many files in one folder | `SharePoint.Files` filtered early, or `Folder.Files` on a synced path | A direct read per file, which does not scale |
+| A file that moves or gets renamed | `SharePoint.Files`, accepting the crawl cost | A fixed path that breaks silently |
+| Data that will never change again | A static blob frozen into the model, see the paging reference | Re-pulling closed history on every refresh |
 
 ## Reading an Excel file on SharePoint
 
@@ -75,7 +26,7 @@ Read the file directly. Do not enumerate the site.
 // GOOD: direct file read, fast
 let
   Source = Excel.Workbook(
-    Web.Contents("https://yourtenant.sharepoint.com/sites/YourSite/Shared Documents/Folder/File.xlsx"),
+    Web.Contents("https://yourtenant.sharepoint.com/sites/YourSite/Shared%20Documents/Folder/File.xlsx"),
     null, true),
   Table1 = Source{[Item = "TableName", Kind = "Table"]}[Data]
 in
@@ -92,20 +43,10 @@ in
   File
 ```
 
-To get the exact direct URL, open the file location in the browser and use the path, or in
-the file details pane copy the Path field. Avoid the share link with the `?e=` parameter, it
-is not a clean path.
-
-## Which method to use
-
-Default to the direct file read. When you know where the file lives, point at its exact URL.
-Most files stay put, so a fixed path keeps working and the refresh stays fast. This is the
-right choice almost every time.
-
-Use `SharePoint.Files` (the whole site crawl) only when one of these is true:
-- The file is expected to move or get renamed, so a fixed path would break.
-- You cannot get or keep the exact path, for example you are not in touch with the file owner
-  to confirm where it lives.
+To get the exact direct URL, open the file location in the browser and use the path, or in the
+file details pane copy the Path field. Avoid the share link with the `?e=` parameter, it is not
+a clean path. Percent encode the spaces (`Shared%20Documents`). Literal spaces also work in
+practice, but one form per model keeps the URLs greppable.
 
 Do not use the SharePoint REST API for a normal file read:
 
@@ -116,22 +57,89 @@ Web.Contents("https://yourtenant.sharepoint.com/sites/Site",
   [RelativePath = "_api/web/GetFileById('<file-id>')/$value"])
 ```
 
-If you genuinely need a path that survives a move, weigh that one trade off against the setup
-pain before choosing it.
+Put a `Timeout` on a workbook read the same way you would on an API call. A hung download costs
+the same refresh minutes as a hung request.
+
+### Kind is Sheet or Table, and they differ
+
+`Excel.Workbook` returns both. A `Table` (a real Excel table object) arrives with headers already
+correct. A `Sheet` is the raw grid, so you promote headers yourself and you own whatever title
+rows sit above the data. Prefer a `Table` when the file has one.
+
+### Do not hardcode a sheet or table name a business user can edit
+
+Four patterns, all from a production model, for a workbook someone else maintains.
+
+```m
+// Pick the sheet by a predicate on its name, not by literal match
+ActiveSheet = Table.SelectRows(Source,
+  each [Kind] = "Sheet" and Text.Contains(Text.Lower([Name]), "active")){0}[Data],
+```
+
+```m
+// Take the newest table when a new one appears each year (EPS_2026, EPS_2027, ...)
+EPSNames  = Table.SelectRows(Source, each [Kind] = "Table" and Text.StartsWith([Item], "EPS_")),
+TableName = List.Max(EPSNames[Item]),
+Data      = Source{[Item = TableName, Kind = "Table"]}[Data],
+Year      = try Number.FromText(Text.AfterDelimiter(TableName, "_"))
+            otherwise error "Table name must end with a year like EPS_2026",
+```
+
+```m
+// Find the header row inside a messy sheet instead of Table.Skip(n)
+WithIndex = Table.AddIndexColumn(sheetData, "__idx", 0, 1, Int64.Type),
+HeaderRow = Table.SelectRows(WithIndex,
+              each Text.Trim(Text.From(Record.Field(_, Table.ColumnNames(sheetData){0}))) = "Company"),
+HeaderIdx = if Table.RowCount(HeaderRow) = 0
+            then error "Could not find a header row starting with 'Company'."
+            else HeaderRow{0}[__idx],
+Promoted  = Table.PromoteHeaders(Table.Skip(sheetData, HeaderIdx), [PromoteAllScalars = true]),
+Trimmed   = Table.TransformColumnNames(Promoted, each Text.Trim(_)),
+```
+
+```m
+// One sheet per year or region: fan out and combine in one workbook read
+YearSheets  = Table.SelectRows(Source, each [Kind] = "Sheet" and IsYearSheet(Text.From([Item]))),
+WithYear    = Table.AddColumn(YearSheets, "YearValue", each YearFromSheetName([Item]), Int64.Type),
+Transformed = Table.AddColumn(WithYear, "Data2", each TransformSheet([Data], [YearValue]), type table),
+Final       = Table.Combine(Transformed[Data2]),
+```
+
+`Table.Skip` with a hard coded number breaks the first time someone inserts a row above the
+table. `Table.TransformColumnNames(..., each Text.Trim(_))` is the companion fix for headers
+that carry a trailing space.
 
 ## Authentication notes (Pro)
 
-- ServiceNow REST: Basic (user and password) or OAuth. Set it once in Desktop, and again in
-  the Service under the dataset's data source credentials.
+- ServiceNow REST: Basic (user and password) or OAuth. Set it once in Desktop, and again in the
+  Service under the dataset's data source credentials.
 - SharePoint and SharePoint files and Excel on SharePoint: Organizational account (OAuth).
 - Set privacy levels consistently. When two sources are combined in one query, mismatched
   privacy levels throw a Formula.Firewall error. For a single tenant, Organizational on all
-  sources is usually right, and it does not cause the "operation cancelled" timeout error.
+  sources is usually right, and it does not cause the "operation cancelled" timeout error. The
+  model level override is in `references/refresh-troubleshooting.md`.
+
+## The literal first argument rule, and its one safe exception
+
+The first argument to `Web.Contents` must be a constant. That is what lets the Service bind one
+credential to one host and refresh on a schedule.
+
+```m
+Web.Contents("https://yourinstance.service-now.com", [RelativePath = ..., Query = ...])   // fine
+WorkbookUrl = "https://yourtenant.sharepoint.com/sites/Site/File.xlsx",
+Web.Contents(WorkbookUrl)                                                                  // also fine
+Web.Contents("https://" & host & "/api/" & table)                                          // breaks in the Service
+```
+
+A `let` binding to a string constant is safe, and it reads better when the same URL is used
+twice. What breaks the Service is a URL that is *computed* from data or a parameter. Keep
+everything variable in `RelativePath` and `Query`.
 
 ## A clean staging query
 
-Keep the raw pull in its own query (a staging query, load disabled), do the reshape there,
-then let the model tables build from it. But remember the duplication rule in
-`folding-and-duplication.md`: if several loaded tables reference the same staging query, it
-runs several times. On Pro, the fix is to reduce how many loaded tables re-derive from the
-same expensive pull, not to add a Gen1 dataflow.
+Keep the raw pull in its own query, load disabled, do the reshape there, then let the model
+tables build from it.
+
+Then count how many things reference it. A referenced query re-runs in full every time,
+including its network calls, and that count is the number that decides your refresh time. The
+counting method and what to do about it are in `references/folding-and-duplication.md`.

@@ -55,10 +55,12 @@ foreach ($d in $skillDirs) {
     if ($desc.Length -eq 0)    { Add-Fail $skillMd 3 'description is empty or not a >- block' }
     if ($desc.Length -gt 1024) { Add-Fail $skillMd 3 "description is $($desc.Length) chars, cap is 1024" }
 
-    # Reference files stay loadable on their own.
+    # Reference files stay loadable on their own. 250 lines is roughly 3k tokens, which is one
+    # focused read on top of a SKILL.md. The cap is a proxy for the real rule, one topic per
+    # reference. A file that needs more than this is usually covering two topics.
     Get-ChildItem (Join-Path $d.FullName 'references') -Filter *.md -ErrorAction SilentlyContinue | ForEach-Object {
         $rc = (Get-Content $_.FullName).Count
-        if ($rc -gt 200) { Add-Fail $_.FullName $rc "reference is $rc lines, cap is 200, split it" }
+        if ($rc -gt 250) { Add-Fail $_.FullName $rc "reference is $rc lines, cap is 250, split it by topic" }
     }
 }
 

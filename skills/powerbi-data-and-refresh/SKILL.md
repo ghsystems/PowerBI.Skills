@@ -79,14 +79,13 @@ Full reasoning and the rest of the list in `references/refresh-cost-model.md`.
   the file will move or you cannot get a stable path. Do not use the REST `GetFileById` endpoint
   for a normal read, its credential test is fragile. Full decision rule in
   `references/connecting-to-sources.md`.
-- REST paging: a ServiceNow Table API or similar should page with `List.Generate`, order by
-  a stable key (for ServiceNow, `ORDERBYsys_id`), stop as soon as a page returns fewer rows
-  than the page size, and keep the row ceiling the same if you change the page size (page
-  size times max pages). A very large page with expanded reference or display values can hit
-  the source's own transaction limit and be cancelled, which surfaces to Power BI as "the
-  operation was cancelled". Smaller pages (a few thousand) are safer. Add a per request
-  `Timeout` to `Web.Contents` so a stalled call fails fast instead of hanging toward the
-  2 hour wall.
+- REST paging: page with `List.Generate`, order by a stable key (for ServiceNow,
+  `ORDERBYsys_id`), stop as soon as a page returns fewer rows than the page size, and keep the
+  row ceiling the same if you change the page size (page size times max pages). `FetchPage`
+  must return a declared empty table on a zero row page or `Table.Combine` breaks. Start at a
+  page size of 10000 for a ServiceNow Table API and drop to a few thousand if you see "the
+  operation was cancelled", which means the source could not assemble the page. Put a `Timeout`
+  on every `Web.Contents` call, paged or not. Full loop in `references/rest-paging-pattern.md`.
 - Do not push a Dataflow Gen1 into a model that also refreshes on a schedule. On Pro there
   is no orchestration between the two, so the model can read stale or partial data or fail.
   See `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
@@ -96,8 +95,12 @@ Full reasoning and the rest of the list in `references/refresh-cost-model.md`.
 
 ## References in this skill
 
-- `references/connecting-to-sources.md`: REST and ServiceNow paging pattern, SharePoint file
-  reads, auth, and the shape of a clean staging query.
+- `references/connecting-to-sources.md`: picking the connector, SharePoint and Excel file reads
+  including the patterns for a workbook a business user edits, auth, and the literal URL rule.
+- `references/rest-paging-pattern.md`: the complete paging loop with the empty page guard, page
+  size and timeout rules, flattening reference fields, and building a filter from a table.
+- `references/m-hardening.md`: surviving schema drift, quoting field names with punctuation,
+  parsing durations and choice fields, text key joins, and turning one row into several.
 - `references/folding-and-duplication.md`: query folding, and the "referencing a query
   re-runs it" duplication trap, with how to reduce it on Pro.
 - `references/refresh-troubleshooting.md`: a step by step for a slow or failing refresh, the

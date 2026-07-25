@@ -27,7 +27,8 @@ not guess. Find the culprit, then fix that.
   source (for example ServiceNow) cancelled a heavy request. Fix by making that query
   cheaper (smaller pages, direct file reads, less duplication) and add a `Timeout`.
 - "Formula.Firewall ... information could not be combined": privacy levels. Two sources with
-  mismatched privacy are being combined. Set them consistently (often Organizational).
+  mismatched privacy are being combined. Set them consistently (often Organizational), or turn
+  the firewall off at the model level (see below).
 - "Please specify how to connect": missing or wrong credentials on that source.
 - "The key did not match any rows" or a missing column: schema drift, the source changed its
   columns. Make the query tolerant (MissingField.Ignore, check column presence).
@@ -49,6 +50,30 @@ not guess. Find the culprit, then fix that.
    sixty hidden calculated columns. One bad date value (a 1900 sentinel, or a blank feeding a
    DAX date expression, which resolves to 1899) makes a single one of those tables span
    centuries. Turn it off and use one date table you own. Detail in `refresh-cost-model.md`.
+
+## The model level switches behind the firewall error
+
+Three data access options live in `model.tmdl` and change how the mashup engine behaves for the
+whole model. Desktop writes them when you change the matching setting in the UI, and they are
+visible and editable in TMDL:
+
+```tmdl
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+```
+
+- `fastCombine` disables the privacy firewall. This is what lets one query combine an API pull
+  with a workbook read without a Formula.Firewall error, and it is usually why a model that
+  should not work does. Understand the trade before turning it on: with the firewall off, the
+  engine may send data from one source to another as part of folding a query, so only use it
+  where every source is inside your own tenant and you are comfortable with that.
+- `returnErrorValuesAsNull` changes errors into nulls at load. It makes a refresh succeed that
+  would otherwise fail, and it hides the row that was wrong. Prefer fixing the transform.
+- `legacyRedirects` allows the older HTTP redirect handling. Leave it as Desktop set it.
+
+If a model refreshes on one machine and fails on another, compare this block first.
 
 ## The Pro limits that bite
 
