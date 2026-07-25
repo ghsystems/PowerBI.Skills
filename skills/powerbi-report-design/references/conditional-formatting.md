@@ -27,6 +27,11 @@ that fits the question, rather than coloring for its own sake.
 - In-cell data bars. Length encodes magnitude next to the number. Good for a single ranked
   column in a table or matrix.
 - KPI status icons. A small icon set (up, flat, down, or a traffic light) next to the value.
+- On target band. A three stop gradient where the MIDDLE is good and both ends are bad. For
+  utilization, capacity, or budget adherence, being under is as much a problem as being over, and
+  a one directional ramp cannot say that. Stops of bad at 0.5, good at 1.0, bad at 1.2 read as
+  "near 100 percent is where you want to be". This is the pattern most people are missing when
+  they reach for a plain red to green ramp on a utilization chart.
 
 ## What you can format, and where
 
@@ -121,6 +126,33 @@ lives in a Field value measure or in Rules on the visual. See `references/color-
 - Watch contrast on colored cells. Black text on a saturated `bad` orange fill can fall under
   4.5 to 1. If it does, add a Font color conditional format so the text flips to white on the
   dark fills. Check the pair with the TPGi eyedropper on the live canvas.
+
+  The working pattern is two measures that travel together, one for the fill and one for the
+  text, with matching thresholds:
+
+  ```DAX
+  Heat Color =
+  VAR v = [Task Updates % of Grand Total]
+  RETURN
+  SWITCH ( TRUE (),
+      v <= 0.01, "#FFFFFF",
+      v <= 0.03, "#FDD0A2",
+      v <= 0.05, "#FD8D3C",
+      v <= 0.08, "#D94801",
+      "#A63603" )
+  ```
+  ```DAX
+  Heat Font =
+  VAR v = [Task Updates % of Grand Total]
+  RETURN IF ( v > 0.05, "#FFFFFF", "#252423" )
+  ```
+
+  The font measure's threshold is deliberately the same band boundary where the background
+  crosses into dark. Change one, change the other. Never ship a background color measure without
+  its paired font measure.
+
+  A `SWITCH ( TRUE (), ... )` ladder like this also handles a ramp that is not monotonic, where
+  both low and high are bad, which neither Gradient nor Rules mode can express.
 - See `references/accessibility.md`.
 
 ## Pro vs Premium

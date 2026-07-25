@@ -86,8 +86,7 @@ These run their intelligence in the Power BI engine on the local model, so they 
 - Smart narrative: Custom mode (you author the dynamic text) is Pro. Copilot authored narrative
   needs Fabric or Premium.
 
-The report-design skill's `references/analytical-visuals.md` has the how-to and a Pro vs Fabric
-table.
+The `powerbi-report-design` skill has the how-to and a Pro vs Fabric table for these.
 
 ## Sources
 

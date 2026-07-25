@@ -54,6 +54,34 @@ often fails a client review. The rules of thumb are in `references/design-princi
   colors, before they are ever on the canvas.
 - https://www.tpgi.com/color-contrast-checker/ and https://webaim.org/resources/contrastchecker/
 
+## Verify it, do not assume it
+
+Alt text is the accessibility rule most often stated and least often done. A well built report
+was found with a deliberate, curated tab order on all 148 visuals and not one single piece of alt
+text. The pass was half done, and nobody noticed because nothing checks.
+
+On a PBIP you can check both in seconds. Run these from the project root with Desktop closed.
+
+```powershell
+# how many visuals exist, and how many have alt text
+$v = Get-ChildItem .\*.Report\definition\pages -Recurse -Filter visual.json
+"visuals: $($v.Count)"
+"with alt text: $(($v | Select-String -Pattern '"altText"').Count)"
+```
+
+```powershell
+# any visual left on the default tab order
+Get-ChildItem .\*.Report\definition\pages -Recurse -Filter visual.json |
+  Where-Object { -not (Select-String -Path $_.FullName -Pattern '"tabOrder"' -Quiet) } |
+  Select-Object -ExpandProperty FullName
+```
+
+Run them before you ship, not after a client review. If the alt text count is far below the
+visual count, the report is not accessible whatever the contrast checker says.
+
+Decorative shapes and images legitimately have no alt text, so expect the two numbers to differ
+by the number of logos and backing shapes. A count of zero is never legitimate.
+
 ## Built in support to lean on
 
 - Keyboard navigation and screen reader support are built into Power BI reports. A clean tab

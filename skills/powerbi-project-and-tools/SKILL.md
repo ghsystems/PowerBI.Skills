@@ -73,8 +73,11 @@ republish from Power BI Desktop. See `references/licensing-cheatsheet.md`.
 ## References in this skill
 
 - `references/pbip-and-tmdl.md`: what the pbip format is, the folder and file layout, TMDL as
-  the source of truth, safe hand editing rules, the partition type gotcha with the exact error,
+  the source of truth, safe hand editing rules, query groups, the lineageTag uniqueness rule,
   and the OneDrive and path length traps.
+- `references/calculated-table-conversion.md`: the full procedure for flipping a table from an M
+  partition to a calculated one to kill refresh fan out, with the cache deletion step and the two
+  column lineage traps that stop the model opening.
 - `references/external-tools.md`: the free Pro friendly tools, what each is for, and the XMLA
   write boundary repeated clearly.
 - `references/licensing-cheatsheet.md`: a compact Pro versus Premium versus Fabric table.

@@ -83,6 +83,24 @@ Get-ChildItem "$root\skills" -Recurse -Include *.md, *.json | ForEach-Object {
     }
 }
 
+# Every `references/x.md` pointer must resolve inside its own skill. A pointer that names a
+# file living in a different skill reads as intra skill and silently misleads.
+foreach ($d in $skillDirs) {
+    Get-ChildItem $d.FullName -Recurse -Filter *.md | ForEach-Object {
+        $src = $_.FullName
+        $n = 0
+        foreach ($line in (Get-Content $src)) {
+            $n++
+            foreach ($m in [regex]::Matches($line, '`references/([A-Za-z0-9._-]+\.(?:md|json))`')) {
+                $target = Join-Path $d.FullName "references\$($m.Groups[1].Value)"
+                if (-not (Test-Path $target)) {
+                    Add-Fail $src $n "points at references/$($m.Groups[1].Value), which does not exist in this skill"
+                }
+            }
+        }
+    }
+}
+
 # Redaction. No real company, tenant, or instance names anywhere in the repo.
 $banned = @(
     @{ Rx = '(?i)glasshouse';                    Msg = 'real company name, use ABC Company' }
