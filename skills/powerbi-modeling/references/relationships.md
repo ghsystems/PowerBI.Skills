@@ -95,6 +95,36 @@ Why the bridge beats a direct many to many relationship:
   and surprising blank handling.
 - The model stays a set of one to many relationships, which is easier to read and maintain.
 
+## When the one to many rule bends
+
+Everything above is the default and it holds most of the time. It does not hold always. One
+production model with 25 relationships has four that fail this file's own checklist. All four
+work, all four are deliberate. Being able to recognise a justified exception matters as much as
+knowing the rule.
+
+The four shapes, in rising order of risk:
+
+- **Dimension to dimension.** A date column on a dimension related to the date or period table,
+  for example a last updated month on a work item dimension. Legitimate. Nothing says a
+  dimension cannot carry a date you want to filter on.
+- **Fact to fact, single direction.** A plan table filters a transaction table, because the plan
+  sets the scope and the transactions report against it. Single direction keeps the filter path
+  readable and the totals predictable.
+- **Dimension to fact declared with the dimension on the "from" side.** It works only because
+  the "to" side happens to be unique today. Nothing enforces that uniqueness, so one duplicate
+  row from the source flips it at refresh time. Fragile, and worth a note in the model.
+- **Fact to fact, bidirectional, on a composite string key.** Used when two facts sit at
+  different grains (work item grain versus company month grain) and neither side has a surrogate
+  key to hang a dimension off. This is the one genuinely risky case. Test the totals from both
+  directions before you ship it, and prefer a virtual relationship (`TREATAS` in a measure, see
+  the `powerbi-dax` skill) if you can, because a virtual relationship does not change the
+  model's filter graph at all.
+
+Each of these costs something. A bidirectional fact to fact join makes the filter graph harder
+to reason about, and it can produce ambiguity later, when someone adds a third table that closes
+a loop nobody was looking for. The checklist below is still the default. Break it on purpose,
+with a reason written down, or not at all.
+
 ## Relationship columns must be clean keys
 
 A relationship is only as good as the columns it joins on. The key on the "one" side must be:
@@ -112,6 +142,31 @@ Practical habits:
 - Keep the key work in M or the source, not in DAX calculated columns. See
   `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
 
+### When the source cannot give you a surrogate key
+
+Plenty of sources cannot. A ticketing API hands you a text ticket number, and a workbook a
+person maintains by hand hands you whatever they typed. You still need the join, so:
+
+- Accept a text key, but make it deterministic. Trim both sides. Normalize case as well if the
+  source is inconsistent about it, that is cheaper than debugging one unmatched row next month.
+- When you must build a composite key, format every part explicitly so both sides concatenate
+  identically. `FORMAT ( Year, "0000" )` rather than letting an integer stringify however it
+  happens to. Same for the month part, same for any padded id.
+- End the query that feeds the "one" side with an explicit dedupe, and comment it as
+  relationship insurance:
+
+```m
+// Relationship insurance. A duplicate here silently turns the relationship many to many.
+Deduped = Table.Distinct(Source, {"Task Number"})
+```
+
+  A duplicate arriving on the one side does not raise an error. It changes the cardinality at
+  refresh time, and you find out from a wrong total on someone else's report.
+
+The honest trade: this is a fallback, not an equal option. Text keys compress worse, join
+slower, and depend on a cleaning step that has to keep working. An integer surrogate key is
+still better whenever the source can give you a stable one.
+
 ## Quick checklist
 
 - Is every relationship one to many from a dimension into a fact.
@@ -119,5 +174,7 @@ Practical habits:
 - Does any table pair have more than one relationship. If so, is the right one active, and are the
   others driven by `USERELATIONSHIP`.
 - Is every "one" side key unique, non blank, and a single data type.
+- Is that uniqueness re-checked after every source change, not just on the day you created the
+  relationship.
 - Is any many to many wired through a bridge table, not a direct many to many relationship.
 - Are there orphan keys on the facts showing up as a blank member.

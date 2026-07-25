@@ -7,7 +7,9 @@ are placeholders. Use `ABC Company` and generic column names in anything shared,
 
 ## Dimensions vs facts
 
-Every model table is either a dimension or a fact. Decide which before you do anything else.
+Almost every model table is either a dimension or a fact. Decide which before you do anything
+else. A few tables are neither, and that is fine when it is deliberate, see "The third role"
+below.
 
 - A dimension table describes a business entity: the things you filter and group by. Product,
   Customer, Store, Employee, and Date are dimensions. A dimension has one key column that
@@ -21,6 +23,50 @@ Dimensions filter and group. Facts summarize. A visual picks dimension columns f
 legend, then sums or counts fact columns. Build the model to match that split. Do not mix the
 two types in one table. The one narrow exception is a degenerate dimension, an attribute like an
 order number that lives on the fact purely for filtering.
+
+## The third role: tables that are neither
+
+Some tables are not dimensions and not facts. They exist to feed the model itself rather than
+to be sliced or summed. This is normal in a working model. Four kinds turn up in practice, all
+four observed in one production operational model.
+
+**Config table.** Holds parameters or weights that DAX reads, and nothing else. Hidden, and
+related to nothing. The production example is a customer allocation table of `Customer` and
+`Weight`, read only by a calculated table's DAX to prorate shared effort across clients. No
+visual ever touches it. Prefix it `cfg_` so the name says what it is.
+
+**Disconnected column header table.** Its rows become the columns of a matrix, and one routing
+measure fills the cells. It is related to nothing on purpose, because the matrix groups on its
+rows and the measure decides what each cell means. For the `DATATABLE` TMDL and the
+`SELECTEDVALUE` plus `SWITCH` measure that drives it, see the `powerbi-dax` skill.
+
+**Field parameter table.** Lets a report user swap which field a visual uses, from a slicer.
+Power BI generates it, and it is disconnected too. See the `powerbi-dax` skill for the TMDL.
+
+**Staging or transform table left loaded in the model.** Sometimes legitimate, when several
+tables build on one reshape and materializing it once is cheaper than repeating it. Often it is
+debt. Say it plainly: if no DAX reads it and no visual uses it, it is costing refresh time and
+model size for nothing. Disable load or delete it.
+
+Rule of thumb: these tables are fine, but each one needs a reason you can say in one sentence.
+"It holds the weights the allocation calc reads" is a reason. "It was there when I got here" is
+not. A disconnected table nobody can explain is usually a leftover from an experiment, and the
+cheapest way to find out is to disable load and see what breaks.
+
+Hide all of them. None of these belong in a report author's field list.
+
+## Several fact tables is normal
+
+A star with one fact is the teaching example, not the limit. A real operational model usually
+carries several facts at different grains sharing one set of conformed dimensions. The
+production model runs eight fact tables against a shared dimension core, and that is the
+correct shape, not a sign it grew wrong.
+
+The rule that keeps it a star: facts do not relate to each other directly. They relate through
+the dimensions they share, so a slicer on customer or period filters all of them at once.
+Where a shared dimension genuinely does not exist, do not wire fact to fact just to make one
+number appear. Use a virtual relationship at the measure layer instead (`TREATAS`), see the
+`powerbi-dax` skill. It gives you the filter without changing the model's shape.
 
 ## Define the grain first
 
@@ -141,3 +187,4 @@ you have built.
 - Are dimensions flattened into a star, not left as a snowflake, unless there is a real reason.
 - Is descriptive text living once in a dimension, not repeated across a wide flat table.
 - Does each fact table hold a single fact type, not a blend of transaction and snapshot rows.
+- Can you say in one sentence why each disconnected table exists, and is it hidden.

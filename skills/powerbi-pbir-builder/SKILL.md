@@ -60,7 +60,9 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
 4. Pick the visual type and query roles for what the user wants. Read
    `references/visual-types-and-patterns.md` for the catalog and worked examples.
 5. Work out layout using `references/layout-and-schema-versions.md`, which follows the same
-   8 pixel grid as `design-principles.md` in the `powerbi-report-design` skill.
+   8 pixel grid as the `powerbi-report-design` skill. Check that `report.json` has
+   `"useStylableVisualContainerHeader": true` before writing any container styling, because
+   without it subtitles, dividers, shadows, and header tooltips silently do nothing.
 6. Write the files: the page folder, `page.json`, each visual's folder and `visual.json`,
    then update `pages/pages.json` to add the new page to `pageOrder`.
 7. Validate every JSON file you wrote parses cleanly.
@@ -90,10 +92,16 @@ the general pbip safety rules, use `powerbi-project-and-tools`.
 
 - `references/pbir-structure-and-safety.md`: the PBIR folder layout, the files you write
   versus the files only Desktop can generate, and the full safe editing checklist.
-- `references/visual-types-and-patterns.md`: the visual type identifiers and query roles for
-  the common chart types, with worked JSON examples for a KPI card, a trend chart, and a
-  slicer, plus dynamic titles bound to a measure (and the grain trap that overstates them) and
-  slicer sync groups.
-- `references/layout-and-schema-versions.md`: canvas sizes, an 8 pixel grid layout table for
-  common page compositions, z order convention, and how to detect the schema version already
-  in use instead of hardcoding one.
+- `references/visual-types-and-patterns.md`: the visual type catalog and query roles, field
+  reference shapes, letting a field parameter drive a role, and worked JSON for a trend chart,
+  a slicer, and an image.
+- `references/formatting-and-selectors.md`: where formatting lives, the five selector forms and
+  why the wrong one silently does nothing, referencing a theme color with `ThemeDataColor`, the
+  container card that makes a report look finished, gradients, and reference lines.
+- `references/cards-and-dynamic-text.md`: the new card's confirmed shape, the legacy card's
+  remaining job, titles bound to a measure, and the grain trap that overstates them.
+- `references/filters-and-sync.md`: the `filterConfig` shapes including excluding blanks
+  properly, and slicer sync group naming.
+- `references/layout-and-schema-versions.md`: canvas, the two grid densities with real numbers,
+  the z and tab order bands Desktop actually writes, hiding a visual, and reading the schema
+  version already in use instead of hardcoding one.

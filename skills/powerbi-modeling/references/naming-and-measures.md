@@ -39,6 +39,38 @@ lifetime and buries it in the field list under the data columns. Move every meas
 `_Measures`. Report authors read numbers from the measure table and slice by columns on the data
 tables. The two jobs stay separate.
 
+## Prefix every table with its role
+
+Column and measure names get all the attention, and table names get none. Give tables a prefix
+taxonomy that doubles as a pipeline. This one comes from a production model:
+
+| Prefix | Holds |
+| --- | --- |
+| `stg_` | raw pull from one source, load disabled |
+| `int_` | intermediate transform, load disabled |
+| `xform_` | a union or reshape that several tables build on |
+| `dim_` | dimension |
+| `fact_` | fact |
+| `cfg_` | config read only by DAX, hidden |
+| `_Measures` | the measure holder |
+
+The payoff is plain. The field list sorts into pipeline order instead of alphabetical soup, and
+you can tell from the name alone what a table is and whether it should be visible to a report
+author. A `stg_` table showing up in the field list is a bug you can spot without opening
+anything.
+
+Mirror the same taxonomy in the Power Query query groups so the editor matches the model. In
+TMDL, a backslash makes a nested group:
+
+```tmdl
+queryGroup 00_Admin
+	annotation PBI_QueryGroupOrder = 0
+queryGroup 02_Staging
+	annotation PBI_QueryGroupOrder = 2
+queryGroup 04_Model\Dimensions
+	annotation PBI_QueryGroupOrder = 0
+```
+
 ## Naming conventions
 
 - Friendly business names. Rename source columns to what the business calls them. `SalesAmount`
@@ -68,6 +100,45 @@ Set these before a measure ships in a report, not after someone asks why it look
 is a standard Analysis Services modeling practice, not a house quirk, and it is cheap insurance
 against a report that reads sloppy.
 
+A rule shown zero times keeps losing. In one production model, of 48 measures, 0 had a display
+folder, 0 had a description, and 2 had an explicit format string. So here is the TMDL, with no
+excuse left to skip it:
+
+```tmdl
+	measure 'Effort Ratio' = DIVIDE ( [Total Effort], [Estimated Effort] )
+		displayFolder: Ratios
+		formatString: 0.0%
+		description: Actual logged effort over the company month estimate. Returns 0, not blank, when no estimate exists.
+		lineageTag: 7d000001-0000-4000-8000-000000000001
+```
+
+One warning worth its own paragraph. `annotation PBI_FormatHint = {"isGeneralNumber":true}` is
+not a format string. It is Desktop recording that the format was left on the default. An audit
+that greps for any formatting at all will count those lines as formatted and hand back a clean
+report on a model that has none. Grep for `formatString:` specifically.
+
+## A measure name taxonomy that survives missing folders
+
+Display folders get skipped, as the numbers above show. A naming pattern does not get skipped,
+because the name is the thing people read. Use one that carries the same grouping in the name,
+so the list still reads well with no folders and maps straight onto folders the day you add
+them. From the same model:
+
+| Pattern | Returns | Folder it maps to |
+| --- | --- | --- |
+| `Title <Visual>` | a string for a dynamic visual title | `Titles` |
+| `<X> Color`, `<X> Heat Font` | a hex string | `Formatting` |
+| `<X> %`, `<X> Ratio` | a ratio | `Ratios` |
+| `<X> Hours` | a quantity | `Effort` |
+
+Two of these are rules, not preferences:
+
+- One title measure per visual, named after the visual it titles, not after the number it
+  computes. When someone deletes the visual, the measure to delete is obvious.
+- Never ship a background color measure without its paired font color measure. On the dark end
+  of a color ramp, dark text on that background is unreadable, so the pair always travels
+  together.
+
 ## Hide keys and technical columns
 
 The field list should show only what a report author should touch.
@@ -83,6 +154,23 @@ The field list should show only what a report author should touch.
 Hiding is not security. It only tidies the field list. It does not stop anyone who can edit the
 model from seeing the column.
 
+### `changedProperty = IsHidden` does not hide anything
+
+In TMDL, a line reading `changedProperty = IsHidden` only records that the property was touched
+at some point. It does not set it. Without a separate `isHidden` line on the column, the column
+is visible. In a production model an entire 24 column dimension read as hidden in a diff and
+shipped fully exposed in the field list.
+
+Count the real hides and compare that count against what you expect:
+
+```powershell
+Select-String -Path .\*.SemanticModel\definition\tables\*.tmdl -Pattern "^\s*isHidden\s*$" |
+  Measure-Object
+```
+
+Trust that number. A scan for `changedProperty` tells you nothing about what is actually
+hidden.
+
 ## One Date table, marked as a date table
 
 Have exactly one Date dimension, built for the job, and mark it. In Power BI Desktop, select the
@@ -95,6 +183,27 @@ table, then Table tools, Mark as date table, and point it at the date column.
   behave correctly. See `powerbi-dax`.
 - Generate it in M or DAX. A DAX calculated Date table is fine and common, just keep it small. See
   `pro-vs-premium-facts.md` in the `powerbi-project-and-tools` skill.
+
+### When a marked Date table genuinely does not apply
+
+That rule is right by default and wrong for one real shape. If the fact grain is a period the
+business names, a sprint, a cycle, a billing period, rather than a date, then a marked date
+table and time intelligence may not apply at all. In a production model the grain is the
+sprint. Its date table is deliberately not marked, it carries 2 of 25 relationships, and not
+one of its 48 measures calls a time intelligence function.
+
+What replaces it:
+- A period dimension with a start date and an end date, so a visual can still answer "when".
+- Period comparison by an explicit key, a composite month or sprint key, not
+  `SAMEPERIODLASTYEAR`.
+- Cumulative windows written over an ordered column, `FILTER ( ALLSELECTED ( col ), col <= MAX
+  ( col ) )`. See the `powerbi-dax` skill.
+
+Two things hold either way:
+- Turn auto date/time off regardless. In `model.tmdl` that is
+  `annotation __PBI_TimeIntelligenceEnabled = 0`.
+- Do not let an agent or a reviewer "fix" this by marking the date table. It will not make a
+  single measure better and it adds a date hierarchy nobody uses.
 
 ## Page layout (house preference)
 
@@ -115,8 +224,12 @@ the `powerbi-report-design` skill and its `design-principles.md` reference.
 - Are all measures in `_Measures`, and is that table named with the leading underscore, never the
   bare reserved word `Measures`.
 - Are there zero measures sitting on fact or dimension tables.
-- Does every shipped measure have a `DisplayFolder`, a `Description`, and an explicit
-  `FormatString`.
-- Are all key and foreign key columns hidden.
+- Does every table name carry its role prefix (`stg_`, `int_`, `xform_`, `dim_`, `fact_`,
+  `cfg_`).
+- Does every shipped measure really have a display folder, a description, and a format string,
+  checked by grepping for `formatString:` and not for a format hint annotation.
+- Are all key, foreign key, and sort by columns hidden with a real `isHidden` line, not just a
+  `changedProperty` entry.
 - Are user facing names friendly and consistently cased.
-- Is there exactly one Date table, and is it marked as a date table.
+- Is the Date table decision made deliberately, either exactly one marked date table, or a
+  period dimension with auto date/time off and no time intelligence.
