@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "powerbi-skills",
-      "description": "Seven Power BI Pro skills that auto trigger on modeling, DAX, refresh, report design, PBIR, tools, and documentation work.",
+      "description": "Eight Power BI Pro skills that auto trigger on build planning, modeling, DAX, refresh, report design, PBIR, tools, and documentation work.",
       "source": "./",
       "category": "productivity"
     }

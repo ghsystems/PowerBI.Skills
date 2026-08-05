@@ -1,8 +1,8 @@
 # Power BI documentation repo playbook
 
 The full process for turning a finished Power BI model into a redacted, shareable git repo.
-Apply the `work-project-setup` skill throughout for the privacy and writing rules. Plain
-engineer voice, no em or en dashes, no semicolons outside code.
+Plain engineer voice, no em or en dashes, no semicolons outside code. The redaction
+checklist below is the privacy rule, run it on every file before it is committed.
 
 ## Repository structure
 

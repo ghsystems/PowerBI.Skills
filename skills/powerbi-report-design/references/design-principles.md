@@ -146,6 +146,6 @@ per instance, it is never applied automatically:
 
 ## Sources
 
-See sources.md for the full list. The anchors for design are Microsoft Learn report design
-and accessibility, SQLBI and Data Goblins (Kurt Buhler), Zebra BI and IBCS, Storytelling
-with Data, and the Financial Times Visual Vocabulary for chart selection.
+The anchors for design are Microsoft Learn report design and accessibility, SQLBI and Data
+Goblins (Kurt Buhler), Zebra BI and IBCS, Storytelling with Data, and the Financial Times
+Visual Vocabulary for chart selection.
