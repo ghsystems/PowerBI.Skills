@@ -16,8 +16,8 @@ description: >-
 
 Turn a finished Power BI model into a clean, redacted, shareable git repo: a knowledgebase
 that explains the model, a reference dump of the real M and DAX by layer, and a README that
-reads like a showcase. Follow the `work-project-setup` skill for the privacy and writing
-rules while you do this.
+reads like a showcase. The privacy rules are the redaction checklist in this skill, and the
+writing voice is plain engineer prose, no em or en dashes, no semicolons outside code.
 
 Read `references/playbook.md` for the full step by step, the exact `.gitignore`, the README
 template, and the redaction checklist.
