@@ -62,6 +62,17 @@ You write: `pages.json` (append to `pageOrder`), one `page.json` per new page, a
    dragged visuals come back with fractional positions. Cached file content and string match
    patterns from before the session are stale, and an exact string edit built on them will miss.
 
+## Respect a hand tuned layout
+
+When editing an existing report, patch only the properties the user asked for. Never re-apply
+a grid, resize, or restyle pass across visuals or pages as a side effect of another change.
+Users iterate on layout by hand in Desktop between sessions, and a scripted pass that rewrites
+`position` blocks or font sizes silently destroys that manual work, which is worse than a bug
+because nothing errors. The fractional positions from step 8 above are the tell that a layout
+has been hand dragged. Read the current values from disk, change the one property requested,
+and leave everything else byte for byte as you found it. A full layout pass happens only when
+the user explicitly asks for one.
+
 ## Formatting: theme first, bespoke second
 
 Formatting is resolved in this order: Power BI defaults, then the theme's wildcard rules,

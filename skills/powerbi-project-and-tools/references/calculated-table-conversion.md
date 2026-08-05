@@ -136,6 +136,21 @@ SELECTCOLUMNS (
 The inner columns are prefixed `@` by convention so it is obvious which are intermediate. The
 outer layer does nothing except produce lineage free columns matching the declarations.
 
+## What changes semantically when M becomes DAX
+
+The rewrite is not value neutral. Two deltas confirmed in live conversions:
+
+- Case sensitivity flips. M comparisons are case sensitive (`List.Contains`, `=` on text). DAX
+  text comparison and `IN` are case insensitive by default. A membership test on mixed case
+  keys, emails are the classic, can match more rows after the conversion, so a coverage
+  percent ticks up. Validate against the old numbers and explain the delta rather than
+  chasing a phantom bug.
+- Null handling is yours to design. This cuts both ways. An unguarded M row expression, for
+  example `#date([Year], [Month], 1)` on a row where those fields are null, fails the whole
+  refresh with "cannot convert null to type Number". Rebuilding the table in DAX is also the
+  natural moment to guard or exclude those rows, which makes the conversion a fix for this
+  class of refresh crash, not just for fan out.
+
 ## What you are trading
 
 Be honest about it. This moves cost from the data phase into the recalc phase, where the table is

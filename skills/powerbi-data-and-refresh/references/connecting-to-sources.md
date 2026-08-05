@@ -109,6 +109,13 @@ Final       = Table.Combine(Transformed[Data2]),
 table. `Table.TransformColumnNames(..., each Text.Trim(_))` is the companion fix for headers
 that carry a trailing space.
 
+The same goes for columns. In a live model a business user inserted one worksheet column, every
+positional mapping to its right (`Column8`, `Column9` renames) shifted by one, and nothing
+errored. The model silently read wrong numbers until someone questioned the totals. Map by
+header name whenever a header exists. Where a headerless block forces positional names, assert
+that a known marker value sits in its expected column and raise a clear `error` when it does
+not, the fail loud pattern in the m-hardening reference of this skill.
+
 ## Authentication notes (Pro)
 
 - ServiceNow REST: Basic (user and password) or OAuth. Set it once in Desktop, and again in the

@@ -45,8 +45,8 @@ error that reaches you as "The key did not match any rows".
 ## Quote a field name that has punctuation in it
 
 A bare `[Effort (Hours)]` is a parse error, not a runtime error, so the query does not fail at
-refresh time, the whole `.pbip` refuses to open. This bites in `each` expressions and record
-constructors.
+refresh time, the whole `.pbip` refuses to open, reporting `Invalid identifier`. This bites in
+`each` expressions and record constructors.
 
 ```m
 // wrong, will not parse

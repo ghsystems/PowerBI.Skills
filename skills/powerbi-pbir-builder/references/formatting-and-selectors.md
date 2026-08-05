@@ -142,7 +142,8 @@ which also keeps the tab order clean because there are no decorative objects to 
 Both sit in `visualContainerObjects`. The pattern that works: a one line subtitle saying what
 the visual shows, and the full calculation rules behind an information icon in the header. End
 the subtitle with a pointer to it, for example "Rules under the header help icon", so a reader
-knows the detail exists.
+knows the detail exists. A matrix has no per column tooltip bucket, so this header tooltip is
+also where a per column legend goes when each column follows a different rule.
 
 ## Conditional formatting in JSON
 

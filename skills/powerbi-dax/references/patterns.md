@@ -153,6 +153,43 @@ TREATAS applies the values of the first argument as a filter on the column in th
 the Date slice drives the Budget table even though the two are not related in the model. It is
 the lightweight way to relate at a different grain without a physical relationship.
 
+## KPI label with an arrow and a semantic color
+
+The KPI card convention (see the `powerbi-report-design` skill) wants a value, an arrow, a
+delta versus the prior period, and a color that encodes good versus bad, never up versus down.
+That is a pair of measures, confirmed in a live report: a label string the card shows as its
+value, and a hex string measure the card binds to its font color (the JSON binding is in the
+`powerbi-pbir-builder` skill).
+
+```dax
+KPI Criticals Label =
+VAR Cur  = [Open Criticals]
+VAR Prev = CALCULATE ( [Open Criticals], DATEADD ( 'Date'[Date], -1, MONTH ) )
+VAR Diff = Cur - Prev
+VAR Arrow =
+    SWITCH ( TRUE (), Diff > 0, UNICHAR ( 9650 ), Diff < 0, UNICHAR ( 9660 ), UNICHAR ( 9644 ) )
+RETURN
+    IF (
+        ISBLANK ( Prev ),
+        FORMAT ( Cur, "#,0" ),
+        FORMAT ( Cur, "#,0" ) & "  " & Arrow & " " & FORMAT ( ABS ( Diff ), "#,0" )
+            & " vs last month"
+    )
+```
+
+```dax
+KPI Criticals Color =
+VAR Prev = CALCULATE ( [Open Criticals], DATEADD ( 'Date'[Date], -1, MONTH ) )
+VAR Diff = [Open Criticals] - Prev
+RETURN
+    SWITCH ( TRUE (), ISBLANK ( Prev ) || Diff = 0, "#605E5C", Diff > 0, "#C0504D", "#4F6228" )
+```
+
+UNICHAR 9650 is the up triangle, 9660 down, 9644 a flat bar. For open criticals rising is bad,
+so up gets the bad color. Flip the color branch, not the arrow, for a metric where rising is
+good. The `ISBLANK ( Prev )` guards matter: on the first month of data the comparison clause
+drops and the color goes neutral, instead of reading as a rise from zero in the bad color.
+
 ## VAR for readable and faster measures
 
 Name each step with VAR. Each variable is evaluated once and then reused, so the measure is
