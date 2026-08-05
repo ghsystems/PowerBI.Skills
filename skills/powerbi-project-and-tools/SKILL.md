@@ -47,6 +47,9 @@ republish from Power BI Desktop. See `references/licensing-cheatsheet.md`.
    writes the TMDL files from memory when it saves. Edits made while it is open get clobbered.
    Desktop also does not watch the files, so it only picks up your edits on a fresh open.
 3. Make one minimal, targeted edit at a time. Change a single property or measure, then verify.
+   Never change a repeated code idiom with a global search and replace. In one live model four
+   measures shared an identical guard block, and a replace all silently rewrote the two that
+   were not the target. Split every edit at the measure boundary.
 4. Keep the encoding UTF-8 without BOM and keep the CRLF line endings. Preserve the tab
    indentation. TMDL structure is whitespace significant, one tab per level.
 5. Reopen in Desktop to verify. If an edit is invalid, Desktop refuses to open and names the
@@ -61,6 +64,9 @@ republish from Power BI Desktop. See `references/licensing-cheatsheet.md`.
   Reopening with the cache in place fails on open with
   `PFE_TM_DDL_CHANGED_PARTITION_FROM_OR_TO_CALC`. This is the light way to kill refresh fan out. See
   `references/pbip-and-tmdl.md`.
+- Deleting `.pbi\cache.abf` is also the safe move after any structural edit, adding or dropping
+  a column or changing a partition source. Desktop then builds fresh from the TMDL instead of
+  morphing stale cached data. The cost is one full refresh on the next open.
 - Keep the pbip repo out of a OneDrive or SharePoint synced folder. OneDrive plus git in one
   folder can corrupt the repo, and Desktop cannot save a pbip cleanly into a synced folder.
 - Pick the tool for the job. Bulk measure edits and the Best Practice Analyzer go to Tabular

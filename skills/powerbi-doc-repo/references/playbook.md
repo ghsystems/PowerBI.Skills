@@ -133,6 +133,19 @@ Create the GitHub repo as Private first. After this first push, make each change
 and open a pull request, then merge on GitHub after review. Never run `git init` twice in the
 same folder.
 
+## Keeping the docs in sync with the model
+
+When the model changes, the reference dump has to follow, and scripted syncing has one trap
+that has caused real overwrites twice. Select the fence to replace by section heading, code
+language, and index within that section, never by "the first fence after the heading" and
+never by "the first fence whose first line matches". Every M fence starts with `let`, and one
+table's section can hold an M fence and a DAX fence side by side, so both shortcuts silently
+overwrite the wrong block while reporting success.
+
+A cheap end to end check: extract every code fence from the docs and confirm each one still
+appears verbatim in the TMDL. A fence that does not match is drift, either a missed sync or a
+block an earlier sync overwrote.
+
 ## Gotchas
 
 - Git plus OneDrive in one folder can corrupt the repo. Keep the repo local, outside any

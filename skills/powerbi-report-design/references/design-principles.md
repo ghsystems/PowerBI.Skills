@@ -110,6 +110,10 @@ the rules above, not against them.
   question does not need a card row, and adding one to satisfy a template produces a number
   nobody uses. A 22 page operational report built to this house style carries no KPI row at all
   and is better for it. Add cards when the page has a headline, not by default.
+- No two visuals restate the same fact. Rule 2 applies within the page too: each visual answers
+  a question no other visual on the page answers. Four cards showing one ratio four ways (the
+  score, its numerator, its denominator, the complement) are one card plus clutter. Before
+  adding a visual, name the question it alone answers.
 - The container carries the structure. A banded title, a short subtitle, an 8 pixel border
   radius, a light shadow, and 2 pixel padding group a visual without drawing a single background
   shape. That is fewer objects, a cleaner tab order, and one theme edit to restyle. Prefer it

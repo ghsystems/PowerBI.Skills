@@ -1,6 +1,6 @@
 {
   "name": "powerbi-skills",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Power BI Pro build skills. Eight focused skills for build planning, modeling, DAX, data and refresh, report design, PBIR authoring, project and tools, and documentation. Pro license only, no Fabric or Premium.",
   "author": {
     "name": "ghsystems",
